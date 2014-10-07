@@ -27,39 +27,39 @@ int main(int argc, char* argv[])
     // Create a clock for measuring the time elapsed
     sf::Clock clock;
     
-    // Start game loop
-    while (window.isOpen())
-    {
-        // Process events
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            // Close window : exit
-            if (event.type == sf::Event::Closed)
-                window.close();
-            
-            // Escape key : exit
-            if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
-                window.close();
-            
-            // Adjust the viewport when the window is resized
-            if (event.type == sf::Event::Resized)
-                glViewport(0, 0, event.size.width, event.size.height);
-        }
-        
-        // Clear the depth buffer
-        glClear(GL_COLOR_BUFFER_BIT);
-        
-        // Draw the cube
-        sf::CircleShape circle(100.0f);
-        circle.setFillColor(sf::Color::Green);
-        
-        window.draw(circle);
-        
-        // Finally, display the rendered frame on screen
-        window.display();
-    }
-    
+//    // Start game loop
+//    while (window.isOpen())
+//    {
+//        // Process events
+//        sf::Event event;
+//        while (window.pollEvent(event))
+//        {
+//            // Close window : exit
+//            if (event.type == sf::Event::Closed)
+//                window.close();
+//            
+//            // Escape key : exit
+//            if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
+//                window.close();
+//            
+//            // Adjust the viewport when the window is resized
+//            if (event.type == sf::Event::Resized)
+//                glViewport(0, 0, event.size.width, event.size.height);
+//        }
+//        
+//        // Clear the depth buffer
+//        glClear(GL_COLOR_BUFFER_BIT);
+//        
+//        // Draw the cube
+//        sf::CircleShape circle(100.0f);
+//        circle.setFillColor(sf::Color::Green);
+//        
+//        window.draw(circle);
+//        
+//        // Finally, display the rendered frame on screen
+//        window.display();
+//    }
+//    
     
     
     
