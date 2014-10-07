@@ -13,6 +13,9 @@ int main(int argc, char* argv[])
 {
     // Request a 32-bits depth buffer when creating the window
     sf::ContextSettings contextSettings;
+    
+    
+    
 
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(800, 600), "ORDO", sf::Style::Default, contextSettings);
