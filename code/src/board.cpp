@@ -1,12 +1,78 @@
 #include "board.h"
 
+#include <random>
+
 
 ////////////////////////////////////////////////////////////////////////////////
-void Board::init(const int width, const int height)
+Board::Board(const int width,
+             const int height,
+             const int nballs)
 {
-    occupied.clear();
+    init(width, height);
+    initBallsRandom(nballs);
     
-    for (int row = 0; row < height; row++) {
-        occupied.push_back(std::vector<bool>(width, false));
+    _playerId = 0;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Board::init(const int width,
+                 const int height)
+{
+    _balls.clear();
+    _width = width;
+    _height = height;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Board::initBallsRandom(const int nballs)
+{
+    _balls.clear();
+    
+    //  keep spwaning random balls until we have enough
+    while (_balls.size() <= nballs)
+    {
+        vec2i pos;
+        pos.x = rand() % _width;
+        pos.y = rand() % _height;
+        
+        //  only add ball if position is free
+        if (_balls.find(pos) != _balls.end()) {
+            _balls.insert(pos);
+        }
     }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Board::movePlayerRight() { _playerId++; }
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Board::movePlayerLeft() { _playerId--; }
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Board::shoot() {}
+
+
+////////////////////////////////////////////////////////////////////////////////
+Board::Side Board::getPlayerSide()
+{
+    return South;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+int Board::getPlayerPosition()
+{
+    return 0;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+vector<vec2i> Board::getPath()
+{
+    return vector<vec2i>();
 }

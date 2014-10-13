@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "board.h"
+#include "sound.h"
 
 
 class Renderer
@@ -14,6 +15,7 @@ class Renderer
         Renderer() {};
         
         void drawBoard(const sf::Window& window, const Board& board) {};
+        void drawSound(const sf::Window& window, const Sound& sound) {};
 };
 
 

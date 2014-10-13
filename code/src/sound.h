@@ -16,5 +16,13 @@ namespace FMOD
 }
 
 
+class Sound
+{
+public:
+    
+    Sound() {};
+};
+
+
 
 #endif
