@@ -58,18 +58,45 @@ void Board::shoot() {}
 
 
 ////////////////////////////////////////////////////////////////////////////////
-Board::Side Board::getPlayerSide()
+Board::Side Board::getPlayerSide() // takes the position and returns the side
 {
-    return South;
+    int r;
+    r=_playerId % (2*(_width+_height)); //in case we did the full circle around the board
+    Side s;
+    if (r<_width) {
+        s=South;
+    }
+    else if (r<_width+_height){
+        s=West;
+    }
+    else if (r<2*_width+_height){
+        s=North;
+    }
+    else if (r<2*(_width+_height)){
+        s=East;
+    }
+    return s;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 int Board::getPlayerPosition()
 {
-    return 0;
+    int r;
+    Side s;
+    r=_playerId % (2*(_width+_height));
+    s=getPlayerSide();
+    if(s==West){
+        r=r-_width;
+    }
+    else if (s==North){
+        r=r-_width-_height;
+    }
+    else if (s==East){
+        r=r-2*_width-_height;
+    }
+    return r;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 vector<vec2i> Board::getPath()
