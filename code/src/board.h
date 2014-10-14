@@ -35,6 +35,14 @@ class Board
             West
         };
     
+    enum Direction {
+        Up,
+        Right,
+        Left,
+        Down
+    };
+    
+    
         Board(const int width = 8,
               const int height = 8,
               const int nballs = 5);
