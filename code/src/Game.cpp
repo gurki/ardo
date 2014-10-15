@@ -37,9 +37,9 @@ void Game::update()
     
     //  set guess orientation to player orientation
     if (renderer_.isFirstPerson()) {
-        currGuess_.orientation = board_.getPlayerDirection();
+        marker_.orientation = board_.getPlayerDirection();
     } else {
-        currGuess_.orientation = Up;
+        marker_.orientation = Up;
     }
     
     //  update sound positions and play sounds
@@ -71,10 +71,80 @@ void Game::render()
     
     if (flags_["guessing"]) {
         renderer_.drawGuesses(board_.getGuesses());
-        renderer_.drawCurrentGuess(currGuess_.position);
+        renderer_.drawCurrentGuess(marker_.position);
     }
     
     window_->display();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Game::shoot()
+{
+    //  get path
+    const vector<vec2i> path = board_.getPath();
+    
+    //  spawn and shoot sound
+    Sound& soundObj = soundRenderer_.spawnSound();
+    soundObj.setPath(path);
+    
+    //  keep track of points
+    const vec2i& first = *path.begin();
+    const vec2i& last = *path.end();
+    
+    //  reflection
+    if (first == last) {
+        points_++;
+    //  hit
+    } else if (!board_.isBorder(last)) {
+        points_++;
+    //  detour
+    } else {
+        points_ += 2;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Game::guess()
+{
+    //  one can only submit if all balls are set ...
+    if (board_.getNumGuesses() < board_.getNumBalls()) {
+        cout << "you need " << board_.getNumBalls() << " balls to lock in" << endl;
+    }
+    //  ... which would be here
+    else
+    {
+        const auto& guesses = board_.getGuesses();
+        
+        //  count correct guesses
+        int correct = 0;
+        
+        for (const auto& guess : guesses) {
+            if (board_.isBall(guess)) {
+                correct++;
+            }
+        }
+        
+        //  account wrong guesses
+        if (correct < board_.getNumBalls()) {
+            cout << "not quite. try again!" << endl;
+            points_ += 5 * (board_.getNumBalls() - correct);
+        }
+        //  all correct
+        else
+        {
+            cout << "================================================================================" << endl;
+            cout << "yiha, nicely done, good sir!" << endl;
+            cout << "your final score is " << points_ << " points." << endl;
+            cout << "let me show you my world." << endl;
+            cout << "================================================================================" << endl;
+            
+            flags_["path"] = true;
+            flags_["balls"] = true;
+            flags_["guessing"] = false;
+        }
+    }
 }
 
 
@@ -128,17 +198,14 @@ void Game::handleKeyboardEvents(const sf::Event& event)
         //  spawn new balls
         case sf::Keyboard::R:
             board_.initBallsRandom(5);
+            flags_["balls"] = false;
+            flags_["path"] = false;
             break;
             
         //  shoot
         case sf::Keyboard::Space:
-        {
-//            cout << "SHOOT!" << endl;
-//            cout << board_.getPath() << endl;
-            Sound& soundObj = soundRenderer_.spawnSound();
-            soundObj.setPath(board_.getPath());
+            shoot();
             break;
-        }
             
         //  fullscreen
         case sf::Keyboard::F:
@@ -191,38 +258,32 @@ void Game::handleGuessingKeyboardEvents(const sf::Event &event)
     switch (event.key.code)
     {
         case sf::Keyboard::W:
-            currGuess_.move();
+            marker_.move();
             break;
             
         case sf::Keyboard::A:
-            currGuess_.left();
+            marker_.left();
             break;
             
         case sf::Keyboard::S:
-            currGuess_.back();
+            marker_.back();
             break;
             
         case sf::Keyboard::D:
-            currGuess_.right();
+            marker_.right();
             break;
         
         case sf::Keyboard::Down:
-            board_.addGuess(currGuess_.position);
+            board_.addGuess(marker_.position);
             break;
             
         case sf::Keyboard::Up:
-            board_.removeGuess(currGuess_.position);
+            board_.removeGuess(marker_.position);
             break;
             
         case sf::Keyboard::Return:
-        {
-            if (board_.getGuesses().size() < board_.getBalls().size()) {
-                cout << "not enough guesses, yet" << endl;
-            } else {
-                cout << "probably right" << endl;
-            }
+            guess();
             break;
-        }
             
         default:
             break;

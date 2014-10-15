@@ -33,8 +33,11 @@ class Board
     
         const int getWidth() const { return width_; };
         const int getHeight() const { return height_; };
+    
         const unordered_set<vec2i>& getBalls() const { return balls_; };
         const unordered_set<vec2i>& getGuesses() const { return guesses_; };
+        const size_t getNumBalls() const { return balls_.size(); };
+        const size_t getNumGuesses() const { return guesses_.size(); };
     
         const bool isBall(const vec2i& pos) const;
         const bool isBorder(const vec2i& pos) const;

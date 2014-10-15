@@ -27,6 +27,9 @@ class Game
         void render();
         void handleEvents();
     
+        void shoot();
+        void guess();
+    
         const bool isRunning() const { return flags_.at("running"); };
 
     
@@ -44,7 +47,8 @@ class Game
         Renderer renderer_;
         SoundRenderer soundRenderer_;
     
-        Object currGuess_;
+        int points_;
+        Object marker_;
     
         sf::Clock clock_;
         unordered_map<string, bool> flags_;
