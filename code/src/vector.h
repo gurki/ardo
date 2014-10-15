@@ -30,14 +30,6 @@ class vec2
             return !(*this == v);
         }
     
-        const bool operator < (const vec2<T>& v) const {
-            return this->abs() < v.abs();
-        }
-    
-        const bool operator > (const vec2<T>& v) const {
-            return this->abs() > v.abs();
-        }
-        
         const vec2<T> operator + (const vec2<T>& v) const {
             return vec2<T>(x + v.x, y + v.y);
         }
@@ -56,7 +48,17 @@ class vec2
 };
 
 
+////////////////////////////////////////////////////////////////////////////////
 typedef vec2<int> vec2i;
+
+
+////////////////////////////////////////////////////////////////////////////////
+template<>
+struct hash<vec2i> {
+    size_t operator()(vec2i const & v) const noexcept {
+        return 51 * (51 + std::hash<int>()(v.x)) + std::hash<int>()(v.y);
+    }
+};
 
 
 #endif
