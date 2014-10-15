@@ -1,6 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include "common.h"
+
 #include <vector>
 #include <math.h>
 
@@ -42,6 +44,11 @@ class vec2
     
         const vec2<T> operator - (const vec2<T>& v) const {
             return vec2<T>(x - v.x, y - v.y);
+        }
+    
+        friend ostream& operator << (ostream& out, const vec2<T>& v) {
+            out << "(" << v.x << ", " << v.y << ")";
+            return out;
         }
     
         T x;
