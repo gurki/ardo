@@ -25,11 +25,14 @@ class Renderer
         void drawBoard(const Board& board) const;
         void drawPlayer(const vec2i& position) const;
         void drawBalls(const unordered_set<vec2i>& balls) const;
+        void drawGuesses(const unordered_set<vec2i>& guesses) const;
+        void drawCurrentGuess(const vec2i& guess) const;
         void drawPath(const vector<vec2i>& path) const;
     
         void setViewType(const bool firstPerson) { fpv_ = firstPerson; };
         void setViewActive(const Board& board) const;
     
+        const bool isFirstPerson() const { return fpv_; };
         const State getPlayerState(const Board& board) const;
     
     

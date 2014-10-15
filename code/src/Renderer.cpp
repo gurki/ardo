@@ -165,14 +165,73 @@ void Renderer::drawBalls(const unordered_set<vec2i>& balls) const
         
             glTranslatef(ball.x, 0.0f, ball.y);
             glColor3f(0.6f, 0.6f, 0);
+            glScalef(0.9f, 1.0f, 0.9f);
             drawFloorTile();
         
-            glTranslatef(0.0f, 0.5f, 0.0f);
+        glPopMatrix();
+        
+        glPushMatrix();
+        
+            glTranslatef(ball.x, 0.5f, ball.y);
             glColor3f(0.9f, 0.9f, 0);
             glutSolidSphere(0.3f, 20, 20);
         
         glPopMatrix();
     }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::drawGuesses(const unordered_set<vec2i> &guesses) const
+{
+    glLineWidth(2.0f);
+    
+    for (const auto& ball : guesses)
+    {
+        glPushMatrix();
+        
+            glTranslatef(ball.x, 0.01f, ball.y);
+            glColor3f(0.3f, 0.7f, 0.7f);
+            glScalef(0.7f, 1.0f, 0.7f);
+            drawFloorTile();
+        
+        glPopMatrix();
+        
+        glPushMatrix();
+        
+            glTranslatef(ball.x, 0.5f, ball.y);
+            glColor3f(0.3f, 0.7f, 0.7f);
+            glutWireSphere(0.35f, 20, 20);
+            
+        glPopMatrix();
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::drawCurrentGuess(const vec2i &guess) const
+{
+    glLineWidth(2.0f);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    
+    glPushMatrix();
+        
+         glTranslatef(guess.x, 0.01f, guess.y);
+         glColor3f(0.3f, 0.8f, 0.8f);
+         glScalef(0.8f, 1.0f, 0.8f);
+         drawFloorTile();
+        
+    glPopMatrix();
+    
+    glPushMatrix();
+        
+        glTranslatef(guess.x, 0.5f, guess.y);
+        glColor3f(0.3f, 1.0f, 1.0f);
+        glutWireSphere(0.4f, 20, 20);
+        
+    glPopMatrix();
+    
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 

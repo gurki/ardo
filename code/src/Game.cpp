@@ -12,14 +12,15 @@ Game::Game(
     windowMode_(mode),
     windowTitle_(title),
     windowSettings_(settings),
-    board_(8, 8, 5),
-    isRunning_(true)
+    board_(8, 8, 5)
 {
     //  initialise flags
     flags_["fullscreen"] = false;
-    flags_["balls"] = true;
-    flags_["path"] = true;
+    flags_["balls"] = false;
+    flags_["path"] = false;
     flags_["fpv"] = true;
+    flags_["guessing"] = false;
+    flags_["running"] = true;
     
     //  initialise world
 //    board_.init(8, 8);
@@ -34,10 +35,16 @@ void Game::update()
 {
     const float dt = clock_.getElapsedTime().asSeconds();
     
+    //  set guess orientation to player orientation
+    if (renderer_.isFirstPerson()) {
+        currGuess_.orientation = board_.getPlayerDirection();
+    } else {
+        currGuess_.orientation = Up;
+    }
+    
     //  update sound positions and play sounds
     Renderer::State state = renderer_.getPlayerState(board_);
     soundRenderer_.setListenerState(state);
-    
     soundRenderer_.update(dt);
     
     clock_.restart();
@@ -62,6 +69,11 @@ void Game::render()
         renderer_.drawPath(board_.getPath());
     }
     
+    if (flags_["guessing"]) {
+        renderer_.drawGuesses(board_.getGuesses());
+        renderer_.drawCurrentGuess(currGuess_.position);
+    }
+    
     window_->display();
 }
 
@@ -77,7 +89,7 @@ void Game::handleEvents()
         //  close window -> exit
         if (event.type == sf::Event::Closed) {
             window_->close();
-            isRunning_ = false;
+            flags_["running"] = false;
         }
         
         //  handle keys
@@ -101,7 +113,7 @@ void Game::handleKeyboardEvents(const sf::Event& event)
         //  close on escape
         case sf::Keyboard::Escape:
             window_->close();
-            isRunning_ = false;
+            flags_["running"] = false;
             break;
             
         //  move player
@@ -147,6 +159,11 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             flags_["balls"] = !flags_["balls"];
             break;
             
+        //  guessing
+        case sf::Keyboard::G:
+            flags_["guessing"] = !flags_["guessing"];
+            break;
+            
         //  path
         case sf::Keyboard::P:
             flags_["path"] = !flags_["path"];
@@ -157,6 +174,55 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             flags_["fpv"] = !flags_["fpv"];
             renderer_.setViewType(flags_["fpv"]);
             break;
+            
+        default:
+            break;
+    }
+    
+    if (flags_["guessing"]) {
+        handleGuessingKeyboardEvents(event);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Game::handleGuessingKeyboardEvents(const sf::Event &event)
+{
+    switch (event.key.code)
+    {
+        case sf::Keyboard::W:
+            currGuess_.move();
+            break;
+            
+        case sf::Keyboard::A:
+            currGuess_.left();
+            break;
+            
+        case sf::Keyboard::S:
+            currGuess_.back();
+            break;
+            
+        case sf::Keyboard::D:
+            currGuess_.right();
+            break;
+        
+        case sf::Keyboard::Down:
+            board_.addGuess(currGuess_.position);
+            break;
+            
+        case sf::Keyboard::Up:
+            board_.removeGuess(currGuess_.position);
+            break;
+            
+        case sf::Keyboard::Return:
+        {
+            if (board_.getGuesses().size() < board_.getBalls().size()) {
+                cout << "not enough guesses, yet" << endl;
+            } else {
+                cout << "probably right" << endl;
+            }
+            break;
+        }
             
         default:
             break;

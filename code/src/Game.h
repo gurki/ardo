@@ -5,6 +5,7 @@
 #include "Renderer.h"
 #include "SoundRenderer.h"
 #include "Board.h"
+#include "Object.h"
 
 #include <unordered_map>
 
@@ -26,12 +27,13 @@ class Game
         void render();
         void handleEvents();
     
-        const bool isRunning() const { return isRunning_; };
+        const bool isRunning() const { return flags_.at("running"); };
 
     
     private:
     
         void handleKeyboardEvents(const sf::Event& event);
+        void handleGuessingKeyboardEvents(const sf::Event& event);
     
         sf::Window* window_;
         string windowTitle_;
@@ -42,8 +44,9 @@ class Game
         Renderer renderer_;
         SoundRenderer soundRenderer_;
     
+        Object currGuess_;
+    
         sf::Clock clock_;
-        bool isRunning_;
         unordered_map<string, bool> flags_;
 };
 
