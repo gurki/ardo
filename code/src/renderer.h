@@ -14,9 +14,11 @@ class Renderer
     public:
         
         Renderer() {};
-        
+    
+        void setBoardFPV(const Board& board) const;
         void drawBoard(const Board& board) const;
-        void drawSound(const Sound& sound) const {};
+        void drawBalls(const unordered_set<vec2i>& balls) const;
+        void drawPath(const vector<vec2i>& path) const;
 };
 
 

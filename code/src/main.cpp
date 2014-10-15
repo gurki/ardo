@@ -73,6 +73,11 @@ int main(int argc, char* argv[])
                         board.movePlayerLeft();
                         break;
                         
+                    //  spawn new balls
+                    case sf::Keyboard::R:
+                        board.initBallsRandom(5);
+                        break;
+                        
                     //  shoot
                     case sf::Keyboard::Space:
                         cout << "SHOOT!" << endl;
@@ -92,7 +97,10 @@ int main(int argc, char* argv[])
         //  render everything
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
+        renderer.setBoardFPV(board);
         renderer.drawBoard(board);
+        renderer.drawBalls(board.getBalls());
+        renderer.drawPath(board.getPath());
         
         window.display();
     }
