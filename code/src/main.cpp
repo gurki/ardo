@@ -5,6 +5,8 @@
 int main(int argc, char* argv[])
 {
     //  create window
+    //      this must be done first, so that the opengl context can initialise
+    //      before the Game() constructor initialises any rendering states
     sf::VideoMode mode = sf::VideoMode(1440, 900);
     string title = "ORDO";
     sf::ContextSettings settings = sf::ContextSettings(32);
@@ -19,7 +21,8 @@ int main(int argc, char* argv[])
     window.setVerticalSyncEnabled(true);
     window.setActive();
     
-    //  create and start game
+    
+    //  create and run game
     Game game(&window, mode, title, settings);
     
     while (game.isRunning())

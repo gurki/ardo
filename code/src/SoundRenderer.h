@@ -4,6 +4,7 @@
 #include "common.h"
 #include "Sound.h"
 #include "Board.h"
+#include "Renderer.h"
 
 #include <wincompat.h>
 #include <fmod.hpp>
@@ -30,10 +31,11 @@ class SoundRenderer
         SoundRenderer();
         ~SoundRenderer();
     
-        void setListener(const Board& board);
+        void setListenerState(const Renderer::State& state);
     
         Sound& spawnSound();
     
+        void clear();
         void update(const float dt);
  
     

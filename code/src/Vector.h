@@ -141,6 +141,13 @@ public:
     const vec3<T> operator / (const S s) const {
         return vec3<T>(x / s, y / s, z / s);
     }
+
+    template <typename S>
+    void operator /= (const S s) {
+        x /= s;
+        y /= s;
+        z /= s;
+    }
     
     friend vec3<T> operator * (const T s, const vec3<T>& v) {
         return vec3<T>(s * v.x, s * v.y, s * v.z);

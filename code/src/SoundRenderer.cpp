@@ -50,19 +50,24 @@ Sound& SoundRenderer::spawnSound()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-void SoundRenderer::setListener(const Board &board)
+void SoundRenderer::setListenerState(const Renderer::State& state)
 {
-    vec2i pos = board.getPlayerCenter();
-    vec2i eye = board.getPlayerEyes();
-    vec2i fwd = eye - pos;
+    vec3f fwd = state[1] - state[0];
+    fwd /= fwd.norm();
     
-    FMOD_VECTOR lpos = {static_cast<float>(pos.x), 0, static_cast<float>(pos.y)};
+    FMOD_VECTOR lpos = {state[0].x, state[0].y, state[0].z};
+    FMOD_VECTOR lfwd = {fwd.x, fwd.y, fwd.z};
+    FMOD_VECTOR lup = {state[2].x, state[2].y, state[2].z};
     FMOD_VECTOR lvel = {0, 0, 0};
-    FMOD_VECTOR lfwd = {static_cast<float>(fwd.x), 0, static_cast<float>(fwd.y)};
-    FMOD_VECTOR lup = {0, 1, 0};
     
     result_ = system_->set3DListenerAttributes(0, &lpos, &lvel, &lfwd, &lup);
     FMOD::check(result_);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void SoundRenderer::clear() {
+    sounds_.clear();
 }
 
 

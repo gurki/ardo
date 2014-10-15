@@ -22,8 +22,8 @@ Game::Game(
     flags_["fpv"] = true;
     
     //  initialise world
-    board_.init(8, 8);
-    board_.initBallsRandom(5);
+//    board_.init(8, 8);
+//    board_.initBallsRandom(5);
     
     clock_.restart();
 }
@@ -34,8 +34,10 @@ void Game::update()
 {
     const float dt = clock_.getElapsedTime().asSeconds();
     
-    //  play sounds
-    soundRenderer_.setListener(board_);
+    //  update sound positions and play sounds
+    Renderer::State state = renderer_.getPlayerState(board_);
+    soundRenderer_.setListenerState(state);
+    
     soundRenderer_.update(dt);
     
     clock_.restart();
