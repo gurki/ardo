@@ -3,7 +3,7 @@
 
 #include "vector.h"
 
-#include <set>
+#include <unordered_set>
 
 using namespace std;
 
@@ -53,11 +53,11 @@ class Board
         const bool isBorder(const vec2i& pos) const;
     
         const vector<vec2i> getPath() const;
-        const set<vec2i>& getBalls() const { return balls_; };
+        const unordered_set<vec2i>& getBalls() const { return balls_; };
     
     private:
     
-        set<vec2i> balls_;
+        unordered_set<vec2i> balls_;
     
         int playerId_;
         int width_;
