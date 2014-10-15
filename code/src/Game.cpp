@@ -220,8 +220,13 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             break;
             
         //  spawn new balls
-        case sf::Keyboard::R:
+        case sf::Keyboard::Num1:
             reset();
+            break;
+            
+        //  reset guesses
+        case sf::Keyboard::R:
+            board_.clearGuesses();
             break;
             
         //  shoot
