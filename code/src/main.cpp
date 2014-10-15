@@ -4,20 +4,21 @@
 #include "SoundRenderer.h"
 
 #include <iostream>
+#include <unordered_map>
 
 using namespace std;
 
 
 int main(int argc, char* argv[])
 {
-    //  create world
-    Board board(8, 8, 5);
-    Renderer renderer;
-    SoundRenderer soundRenderer;
+    //  flags
+    unordered_map<string, bool> flags;
+    flags["fullscreen"] = false;
+    flags["balls"] = true;
+    flags["path"] = true;
+    flags["fpv"] = true;
     
     //  create window
-    bool fullscreen = false;
-    
     sf::VideoMode dmode(1440, 900);
     sf::VideoMode fmode = sf::VideoMode::getFullscreenModes()[0];
     string title = "ORDO";
@@ -25,6 +26,11 @@ int main(int argc, char* argv[])
     
     sf::Window window(dmode, title, sf::Style::Default, settings);
     window.setVerticalSyncEnabled(true);
+
+    //  create world
+    Board board(8, 8, 5);
+    Renderer renderer;
+    SoundRenderer soundRenderer;    
     
     //  start main loop
     sf::Clock clock;
@@ -51,19 +57,6 @@ int main(int argc, char* argv[])
                         window.close();
                         break;
                         
-                    //  fullscreen
-                    case sf::Keyboard::F:
-                    {
-                        if (fullscreen) {
-                            window.create(dmode, title, sf::Style::Default, settings);
-                        } else {
-                            window.create(fmode, title, sf::Style::Fullscreen, settings);
-                        }
-                        
-                        fullscreen = !fullscreen;
-                        break;
-                    }
-                        
                     //  move player
                     case sf::Keyboard::Right:
                         board.movePlayerRight();
@@ -82,11 +75,40 @@ int main(int argc, char* argv[])
                     case sf::Keyboard::Space:
                     {
 //                        cout << "SHOOT!" << endl;
-//                        cout << board.getPath() << endl;
+                        cout << board.getPath() << endl;
                         Sound& soundObj = soundRenderer.spawnSound();
                         soundObj.setPath(board.getPath());
                         break;
                     }
+                     
+                    //  fullscreen
+                    case sf::Keyboard::F:
+                    {
+                        if (flags["fullscreen"]) {
+                            window.create(dmode, title, sf::Style::Default, settings);
+                        } else {
+                            window.create(fmode, title, sf::Style::Fullscreen, settings);
+                        }
+                        
+                        flags["fullscreen"] = !flags["fullscreen"];
+                        break;
+                    }
+                        
+                    //  balls
+                    case sf::Keyboard::B:
+                        flags["balls"] = !flags["balls"];
+                        break;
+                        
+                    //  path
+                    case sf::Keyboard::P:
+                        flags["path"] = !flags["path"];
+                        break;
+                        
+                    //  first / third person view
+                    case sf::Keyboard::V:
+                        flags["fpv"] = !flags["fpv"];
+                        renderer.setViewType(flags["fpv"]);
+                        break;
                         
                     default:
                         break;
@@ -102,10 +124,17 @@ int main(int argc, char* argv[])
         //  render everything
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        renderer.setBoardFPV(board);
+        renderer.setViewActive(board);
         renderer.drawBoard(board);
-        renderer.drawBalls(board.getBalls());
-        renderer.drawPath(board.getPath());
+        renderer.drawPlayer(board.getPlayerCenter());
+        
+        if (flags["balls"]) {
+            renderer.drawBalls(board.getBalls());
+        }
+        
+        if (flags["path"]) {
+            renderer.drawPath(board.getPath());
+        }
         
         window.display();
         

@@ -31,6 +31,7 @@ void Sound::setPath(const vector<vec2i>& path)
         return;
     }
     
+    nextAnchor_ = 0;
     position_ = vec2f(path[0].x, path[0].y);
     
     if (path.size() > 1) {
@@ -45,7 +46,8 @@ void Sound::update(const float dt)
 {
 //    cout << nextAnchor_ << endl;
     
-    if (nextAnchor_ < 0) {
+    if (nextAnchor_ < 0 || nextAnchor_ >= path_.size()) {
+        nextAnchor_ = -1;
         return;
     }
     

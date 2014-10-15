@@ -61,7 +61,8 @@ void SoundRenderer::setListener(const Board &board)
     FMOD_VECTOR lfwd = {static_cast<float>(fwd.x), 0, static_cast<float>(fwd.y)};
     FMOD_VECTOR lup = {0, 1, 0};
     
-    result_ = system_->set3DListenerAttributes(0, &lpos, &lvel, &lfwd, &lup); FMOD::check(result_);
+    result_ = system_->set3DListenerAttributes(0, &lpos, &lvel, &lfwd, &lup);
+    FMOD::check(result_);
 }
 
 

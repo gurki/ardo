@@ -4,6 +4,38 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+Renderer::Renderer() :
+    fpv_(true)
+{
+    initOpenGL();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::initOpenGL() const
+{
+    glEnable(GL_DEPTH_TEST);
+    
+//    static float amb[] =  {1.0, 1.0, 1.0, 0.0};
+//    static float dif[] =  {1, 0, 0, 0};
+//
+//    float light_diffuse[] = {1.0, 1.0, 1.0, 1.0};
+//    float light_position[] = {100.0, 100.0, 100.0, 0.0};
+//
+////     set lights
+//    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+//    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+//
+//    glEnable(GL_LIGHT0);
+//    glEnable(GL_LIGHT1);
+//    glEnable(GL_LIGHTING);
+
+//    glMaterialfv(GL_FRONT, GL_AMBIENT, amb);
+//    glMaterialfv(GL_FRONT, GL_DIFFUSE, dif);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 void drawFloorTile()
 {
     glBegin(GL_QUADS);
@@ -17,23 +49,57 @@ void drawFloorTile()
     glEnd();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+const Renderer::State Renderer::getPlayerState(const Board& board) const
+{
+    State state;
+    
+    if (fpv_)
+    {
+        vec2i c = board.getPlayerCenter();
+        vec2i e = board.getPlayerEyes();
+        
+        state[0] = vec3f(c.x, 0.5f, c.y);
+        state[1] = vec3f(e.x, 0.5f, e.y);
+        state[2] = vec3f(0.0f, 1.0f, 0.0f);
+    }
+    else
+    {
+        const int w = board.getWidth();
+        const int h = board.getHeight();
+
+        state[0] = vec3f(w / 2.0f - 0.5f, 6.0f, h + 1.0f);
+        state[1] = vec3f(w / 2.0f - 0.5f, 0.5f, h / 2.0f + 1.0f);
+        state[2] = vec3f(0.0f, 1.0f, 0.0f);
+    }
+    
+    return state;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::setBoardFPV(const Board& board) const
+void Renderer::setViewActive(const Board& board) const
 {
+    initOpenGL();
     glLoadIdentity();
     gluPerspective(70, 800.0f / 600.0f, 0.01, 100);
     
-    vec2i center = board.getPlayerCenter();
-    vec2i eyes = board.getPlayerEyes();
+    State state = getPlayerState(board);
     
-    gluLookAt(center.x, 0.5f, center.y, eyes.x , 0.5f, eyes.y, 0.0f, 1.0f, 0.0f);
+    gluLookAt(
+        state[0].x, state[0].y, state[0].z,
+        state[1].x, state[1].y, state[1].z,
+        state[2].x, state[2].y, state[2].z
+    );
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 void Renderer::drawBoard(const Board& board) const
 {
+    glPushAttrib(GL_LIGHTING_BIT);
+    glDisable(GL_LIGHTING);
+    
     glLineWidth(2.0f);
     
     const int w = board.getWidth();
@@ -66,6 +132,25 @@ void Renderer::drawBoard(const Board& board) const
         glEnd();
     
     glPopMatrix();
+    
+    glPopAttrib();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Renderer::drawPlayer(const vec2i& position) const
+{
+    if (fpv_) {
+        return;
+    }
+    
+    glPushMatrix();
+    
+        glTranslatef(position.x, 0.5f, position.y);
+        glColor3f(0.9f, 0, 0);
+        glutSolidCube(0.4f);
+    
+    glPopMatrix();
 }
 
 
@@ -84,7 +169,7 @@ void Renderer::drawBalls(const unordered_set<vec2i>& balls) const
         
             glTranslatef(0.0f, 0.5f, 0.0f);
             glColor3f(0.9f, 0.9f, 0);
-            glutWireSphere(0.3f, 20, 20);
+            glutSolidSphere(0.3f, 20, 20);
         
         glPopMatrix();
     }
@@ -98,9 +183,9 @@ void Renderer::drawPath(const vector<vec2i>& path) const
     
     glLineWidth(20.0f);
     
-    if (path.size() < 2) {
-        return;
-    }
+//    if (path.size() < 2) {
+//        return;
+//    }
 
     for (const auto& tile : path)
     {
@@ -108,7 +193,7 @@ void Renderer::drawPath(const vector<vec2i>& path) const
         
         glPushMatrix();
         
-            glTranslatef(tile.x, 0, tile.y);
+            glTranslatef(tile.x, 0.01f, tile.y);
             glScalef(scale, 1, scale);
             drawFloorTile();
         
