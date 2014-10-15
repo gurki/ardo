@@ -275,10 +275,15 @@ const vector<vec2i> Board::getPath() const
             dir = turn(dir, -1);
         //  no balls, pass streight through
         } else {
-            pos.y--;
+            pos = step;
+        }
+        
+        if (isBorder(pos)) {
+            v.push_back(pos);
+            break;
         }
     }
-    while (!isBorder(pos)); //we need at least one iteration to get out of the border
+    while (true); //we need at least one iteration to get out of the border
     
     return v;
 }
@@ -337,6 +342,26 @@ ostream& operator << (ostream& out, const Board::Direction& dir)
         default:
             break;
     }
+    
+    return out;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+ostream& operator << (ostream& out, const vector<vec2i>& v)
+{
+    out << "[";
+    
+    if (v.size() != 0)
+    {
+        for (int i = 0; i < v.size() - 1; i++) {
+            out << v[i] << ", ";
+        }
+        
+        out << v.back();
+    }
+    
+    out << "]";
     
     return out;
 }

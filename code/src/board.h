@@ -12,18 +12,18 @@ class Board
 {
     public:
     
-        enum Side {
+        enum Side {         //  order is important!
             North,
             East,
             South,
             West
         };
     
-        enum Direction {
-            Up,
-            Right,
+        enum Direction {    //  order is important!
+            Down,
             Left,
-            Down
+            Up,
+            Right
         };
     
         Board(const int width, const int height, const int nballs = 0);
@@ -67,6 +67,7 @@ class Board
 
 ostream& operator << (ostream& out, const Board::Side& side);
 ostream& operator << (ostream& out, const Board::Direction& dir);
+ostream& operator << (ostream& out, const vector<vec2i>& v);
 
 
 #endif
