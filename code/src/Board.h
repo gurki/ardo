@@ -1,6 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include "common.h"
 #include "vector.h"
 
 #include <unordered_set>
