@@ -14,23 +14,6 @@ Sound::Sound(FMOD::Channel* channel, FMOD::Sound* sound, FMOD::DSP* dsp)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-Sound::~Sound()
-{   
-//    if (channel_ != nullptr) {
-//        channel_->stop();
-//    }
-    
-//    if (sound_ != nullptr) {
-//        sound_->release();
-//    }
-//    
-//    if (dsp_ != nullptr) {
-//        dsp_->release();
-//    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
 void Sound::stop()
 {
     if (channel_) {
@@ -66,13 +49,17 @@ void Sound::update(const float dt)
     
     vec2i next = path_[nextAnchor_];
     vec2f d1 = vec2f(next.x - position_.x, next.y - position_.y);
+    
+    if (d1.x == 0 && d1.y == 0) {
+        nextAnchor_++;
+        return;
+    }
+    
     vec2f v = d1 / d1.norm() * velocity_;
     
     position_ += dt * v;
     
     vec2f d2 = vec2f(next.x - position_.x, next.y - position_.y);
-    
-//    cout << position_ << ", " << next << ", " << d1 << endl;
     
     if (dot(d1, d2) < 0)
     {

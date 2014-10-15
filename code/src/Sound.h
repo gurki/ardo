@@ -14,7 +14,6 @@ class Sound
     public:
     
         Sound(FMOD::Channel* channel, FMOD::Sound* sound = nullptr, FMOD::DSP* dsp = nullptr);
-        ~Sound();
     
         void setPath(const vector<vec2i>& path);
         void update(const float dt);
