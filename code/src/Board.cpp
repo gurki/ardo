@@ -255,7 +255,7 @@ const vector<vec2i> Board::getPath() const
         //  hit
         if (front) {
             v.push_back(step);
-           dir = turn(dir, 2);
+            return v;
         }
         //  u-turn on border
         else if (isBorder(pos) && (frontLeft || frontRight)) {
