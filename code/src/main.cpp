@@ -3,9 +3,8 @@
 #include "sound.h"
 
 #include <iostream>
-#include <chrono>
 
-#include <SFML/Window.hpp>
+using namespace std;
 
 
 int main(int argc, char* argv[])
@@ -15,14 +14,17 @@ int main(int argc, char* argv[])
     board.initBallsRandom(5);
     
     Renderer renderer;
-
+    
     //  create window
-    sf::ContextSettings contextSettings;
-    contextSettings.depthBits = 32;
-
-    sf::Window window(sf::VideoMode(800, 600), "ORDO", sf::Style::Default, contextSettings);
+    bool fullscreen = false;
+    
+    sf::VideoMode dmode(1440, 900);
+    sf::VideoMode fmode = sf::VideoMode::getFullscreenModes()[0];
+    string title = "ORDO";
+    sf::ContextSettings settings(32);
+    
+    sf::Window window(dmode, title, sf::Style::Default, settings);
     window.setVerticalSyncEnabled(true);
-
     
     //  start main loop
     sf::Clock clock;
@@ -39,13 +41,41 @@ int main(int argc, char* argv[])
                 window.close();
             }
             
-            //  escape key -> exit
+            //  handle keys
             if (event.type == sf::Event::KeyPressed)
             {
                 switch (event.key.code)
                 {
+                    //  close on escape
                     case sf::Keyboard::Escape:
                         window.close();
+                        break;
+                        
+                    //  fullscreen
+                    case sf::Keyboard::F:
+                    {
+                        if (fullscreen) {
+                            window.create(dmode, title, sf::Style::Default, settings);
+                        } else {
+                            window.create(fmode, title, sf::Style::Fullscreen, settings);
+                        }
+                        
+                        fullscreen = !fullscreen;
+                        break;
+                    }
+                        
+                    //  move player
+                    case sf::Keyboard::Right:
+                        board.movePlayerRight();
+                        break;
+                    
+                    case sf::Keyboard::Left:
+                        board.movePlayerLeft();
+                        break;
+                        
+                    //  shoot
+                    case sf::Keyboard::Space:
+                        cout << "SHOOT!" << endl;
                         break;
                         
                     default:
