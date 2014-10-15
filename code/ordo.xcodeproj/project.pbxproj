@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2019066819DEDC3E0066A962 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2019066719DEDC3E0066A962 /* OpenGL.framework */; };
-		20AB278319DEF12000CA569C /* libfmodex.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 20AB277319DEF12000CA569C /* libfmodex.dylib */; };
 		20AB278419DEF12000CA569C /* libsfml-audio.2.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 20AB277419DEF12000CA569C /* libsfml-audio.2.1.dylib */; };
 		20AB278519DEF12000CA569C /* libsfml-audio.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 20AB277519DEF12000CA569C /* libsfml-audio.2.dylib */; };
 		20AB278619DEF12000CA569C /* libsfml-audio.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 20AB277619DEF12000CA569C /* libsfml-audio.dylib */; };
@@ -28,6 +27,8 @@
 		20AB279919DEF13A00CA569C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20AB279519DEF13A00CA569C /* main.cpp */; };
 		20AB279A19DEF13A00CA569C /* renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20AB279619DEF13A00CA569C /* renderer.cpp */; };
 		20AB279D19DEF31900CA569C /* sound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20AB279B19DEF31900CA569C /* sound.cpp */; };
+		20E1E1E319EE042A0092EE25 /* libfmodex.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 20E1E1E219EE042A0092EE25 /* libfmodex.dylib */; };
+		20E1E1E619EE15AB0092EE25 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20E1E1E519EE15AB0092EE25 /* GLUT.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,7 +45,6 @@
 
 /* Begin PBXFileReference section */
 		2019066719DEDC3E0066A962 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		20AB277319DEF12000CA569C /* libfmodex.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfmodex.dylib; path = libs/libfmodex.dylib; sourceTree = "<group>"; };
 		20AB277419DEF12000CA569C /* libsfml-audio.2.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-audio.2.1.dylib"; path = "libs/libsfml-audio.2.1.dylib"; sourceTree = "<group>"; };
 		20AB277519DEF12000CA569C /* libsfml-audio.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-audio.2.dylib"; path = "libs/libsfml-audio.2.dylib"; sourceTree = "<group>"; };
 		20AB277619DEF12000CA569C /* libsfml-audio.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-audio.dylib"; path = "libs/libsfml-audio.dylib"; sourceTree = "<group>"; };
@@ -68,6 +68,9 @@
 		20AB279B19DEF31900CA569C /* sound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sound.cpp; path = src/sound.cpp; sourceTree = SOURCE_ROOT; };
 		20AB279C19DEF31900CA569C /* sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sound.h; path = src/sound.h; sourceTree = SOURCE_ROOT; };
 		20B5A18719EDE50B009DD76F /* vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vector.h; path = src/vector.h; sourceTree = SOURCE_ROOT; };
+		20E1E1E219EE042A0092EE25 /* libfmodex.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libfmodex.dylib; sourceTree = "<group>"; };
+		20E1E1E419EE09BA0092EE25 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = common.h; path = src/common.h; sourceTree = SOURCE_ROOT; };
+		20E1E1E519EE15AB0092EE25 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		20F5DB8A19D4D97B008D52A3 /* ordo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ordo; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -76,7 +79,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20E1E1E619EE15AB0092EE25 /* GLUT.framework in Frameworks */,
 				20AB278819DEF12000CA569C /* libsfml-graphics.2.dylib in Frameworks */,
+				20E1E1E319EE042A0092EE25 /* libfmodex.dylib in Frameworks */,
 				2019066819DEDC3E0066A962 /* OpenGL.framework in Frameworks */,
 				20AB278419DEF12000CA569C /* libsfml-audio.2.1.dylib in Frameworks */,
 				20AB278B19DEF12000CA569C /* libsfml-network.2.dylib in Frameworks */,
@@ -84,7 +89,6 @@
 				20AB278F19DEF12000CA569C /* libsfml-system.dylib in Frameworks */,
 				20AB279119DEF12000CA569C /* libsfml-window.2.dylib in Frameworks */,
 				20AB278719DEF12000CA569C /* libsfml-graphics.2.1.dylib in Frameworks */,
-				20AB278319DEF12000CA569C /* libfmodex.dylib in Frameworks */,
 				20AB278A19DEF12000CA569C /* libsfml-network.2.1.dylib in Frameworks */,
 				20AB278519DEF12000CA569C /* libsfml-audio.2.dylib in Frameworks */,
 				20AB278619DEF12000CA569C /* libsfml-audio.dylib in Frameworks */,
@@ -102,7 +106,9 @@
 		20AB276C19DEEEAA00CA569C /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				20AB277319DEF12000CA569C /* libfmodex.dylib */,
+				2019066719DEDC3E0066A962 /* OpenGL.framework */,
+				20E1E1E519EE15AB0092EE25 /* GLUT.framework */,
+				20E1E1E219EE042A0092EE25 /* libfmodex.dylib */,
 				20AB277419DEF12000CA569C /* libsfml-audio.2.1.dylib */,
 				20AB277519DEF12000CA569C /* libsfml-audio.2.dylib */,
 				20AB277619DEF12000CA569C /* libsfml-audio.dylib */,
@@ -118,7 +124,6 @@
 				20AB278019DEF12000CA569C /* libsfml-window.2.1.dylib */,
 				20AB278119DEF12000CA569C /* libsfml-window.2.dylib */,
 				20AB278219DEF12000CA569C /* libsfml-window.dylib */,
-				2019066719DEDC3E0066A962 /* OpenGL.framework */,
 			);
 			name = libs;
 			sourceTree = "<group>";
@@ -143,6 +148,7 @@
 		20F5DB8C19D4D97B008D52A3 /* ordo */ = {
 			isa = PBXGroup;
 			children = (
+				20E1E1E419EE09BA0092EE25 /* common.h */,
 				20B5A18719EDE50B009DD76F /* vector.h */,
 				20AB279419DEF13A00CA569C /* board.h */,
 				20AB279319DEF13A00CA569C /* board.cpp */,
