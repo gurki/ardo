@@ -158,7 +158,7 @@ const Board::Side Board::getPlayerSide() const // takes the position and returns
 
 
 ////////////////////////////////////////////////////////////////////////////////
-const int Board::getPlayerPosition() const
+const int Board::getPlayerPosition() const //get the position knowing the side
 {
     const int nfields = 2 * (width_ + height_);
     
@@ -187,7 +187,7 @@ const int Board::getPlayerPosition() const
 
 
 ////////////////////////////////////////////////////////////////////////////////
-const vec2i Board::getPlayerCenter() const
+const vec2i Board::getPlayerCenter() const //gives the tile on which is the player
 {
     const int id = getPlayerPosition();
     
@@ -202,7 +202,7 @@ const vec2i Board::getPlayerCenter() const
 
 
 ////////////////////////////////////////////////////////////////////////////////
-const vec2i Board::getPlayerEyes() const {
+const vec2i Board::getPlayerEyes() const { //gives where the player is looking at
     return move(getPlayerCenter(), getPlayerDirection());
 }
 
@@ -227,7 +227,7 @@ const bool Board::isBall(const vec2i& pos) const {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool Board::isBorder(const vec2i& pos) const {
+const bool Board::isBorder(const vec2i& pos) const { //says if the tile is on the border
     return pos.x >= width_ || pos.x < 0 || pos.y >= height_ || pos.y < 0;
 }
 
@@ -255,7 +255,7 @@ const vector<vec2i> Board::getPath() const
         //  hit
         if (front) {
             v.push_back(step);
-            return v;
+           dir = turn(dir, 2);
         }
         //  u-turn on border
         else if (isBorder(pos) && (frontLeft || frontRight)) {
