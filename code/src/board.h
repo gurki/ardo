@@ -7,7 +7,6 @@
 
 using namespace std;
 
-
 ////////////////////////////////////////////////////////////////////////////////
 class Board
 {
@@ -38,6 +37,7 @@ class Board
         void movePlayerRight();
         void movePlayerLeft();
         void setPlayerPosition(const int pos) { playerId_ = pos; };
+    
         void shoot();
     
         const int getWidth() const { return width_; };
@@ -45,14 +45,15 @@ class Board
     
         const Side getPlayerSide() const;
         const int getPlayerPosition() const;
-        const vec2i getPlayerCoordinates() const;
+        const vec2i getPlayerCenter() const;
+        const vec2i getPlayerEyes() const;
         const Direction getPlayerDirection() const;
 
         const bool isBall(const vec2i& pos) const;
         const bool isBorder(const vec2i& pos) const;
     
-        vector<vec2i> getPath();
-    
+        const vector<vec2i> getPath() const;
+        const set<vec2i>& getBalls() const { return balls_; };
     
     private:
     
@@ -62,6 +63,10 @@ class Board
         int width_;
         int height_;
 };
+
+
+ostream& operator << (ostream& out, const Board::Side& side);
+ostream& operator << (ostream& out, const Board::Direction& dir);
 
 
 #endif

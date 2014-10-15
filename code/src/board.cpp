@@ -1,4 +1,5 @@
 #include "board.h"
+#include "common.h"
 
 #include <random>
 
@@ -31,14 +32,14 @@ void Board::initBallsRandom(const int nballs)
     balls_.clear();
     
     //  keep spwaning random balls until we have enough
-    while (balls_.size() <= nballs)
+    while (balls_.size() < nballs)
     {
         vec2i pos;
         pos.x = rand() % width_;
         pos.y = rand() % height_;
         
         //  onlpos.y add ball if position is free
-        if (balls_.find(pos) != balls_.end()) {
+        if (balls_.find(pos) == balls_.end()) {
             balls_.insert(pos);
         }
     }
@@ -80,81 +81,6 @@ void Board::shoot()
      we'll see ...
      also, keep track of points and handle win/loose
      */
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-const Board::Side Board::getPlayerSide() const // takes the position and returns the side
-{
-    int r = playerId_ % (2 * (width_ + height_)); //in case we did the full circle around the board
-
-    if (r < width_) {
-        return South;
-    } else if (r < width_ + height_) {
-        return West;
-    } else if (r < 2 * width_ + height_) {
-        return North;
-    } else {
-        return East;
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-const int Board::getPlayerPosition() const
-{
-    int r = playerId_ % (2 * (width_ + height_));
-    Side s = getPlayerSide();
-
-    if(s == West) {
-        r -= width_;
-    } else if (s == North) {
-        r -= width_ + height_;
-    } else if (s == East) {
-        r -= 2 * width_ + height_;
-    }
-    
-    return r;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-const vec2i Board::getPlayerCoordinates() const
-{
-    const int id = getPlayerPosition();
-    
-    switch (getPlayerSide())
-    {
-        case South: return vec2i(id, height_);
-        case West: return vec2i(width_, id);
-        case North: return vec2i(width_ - 1 - id, -1);
-        case East: return vec2i(-1, height_ - 1 - id);
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-const Board::Direction Board::getPlayerDirection() const
-{
-    switch (getPlayerSide())
-    {
-        case South: return Up;
-        case West: return Right;
-        case North: return Down;
-        case East: return Left;
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-const bool Board::isBall(const vec2i& pos) const {
-    return balls_.find(pos) != balls_.end();
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-const bool Board::isBorder(const vec2i& pos) const {
-    return pos.x >= width_ || pos.x < 0 || pos.y >= height_ || pos.y < 0;
 }
 
 
@@ -211,11 +137,107 @@ vec2i down(const vec2i& pos, const int dir) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-vector<vec2i> Board::getPath()
+const Board::Side Board::getPlayerSide() const // takes the position and returns the side
+{
+    const int nfields = 2 * (width_ + height_);
+    
+    //  in case we did the full circle around the board
+    int r = playerId_ % nfields;
+    r = r < 0 ? r + nfields : r;
+
+    if (r < width_) {
+        return South;
+    } else if (r < width_ + height_) {
+        return East;
+    } else if (r < 2 * width_ + height_) {
+        return North;
+    } else {
+        return West;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+const int Board::getPlayerPosition() const
+{
+    const int nfields = 2 * (width_ + height_);
+    
+    int r = playerId_ % nfields;
+    r = r < 0 ? r + nfields : r;
+
+    switch (getPlayerSide())
+    {
+        case West:
+            r -= 2 * width_ + height_;
+            break;
+            
+        case North:
+            r -= width_ + height_;
+            break;
+            
+        case East:
+            r -= width_;
+            
+        default:
+            break;
+    }
+    
+    return r;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+const vec2i Board::getPlayerCenter() const
+{
+    const int id = getPlayerPosition();
+    
+    switch (getPlayerSide())
+    {
+        case South: return vec2i(id, height_);
+        case West: return vec2i(-1, id);
+        case North: return vec2i(width_ - 1 - id, -1);
+        case East: return vec2i(width_, height_ - 1 - id);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+const vec2i Board::getPlayerEyes() const {
+    return move(getPlayerCenter(), getPlayerDirection());
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+const Board::Direction Board::getPlayerDirection() const
+{
+    switch (getPlayerSide())
+    {
+        case South: return Up;
+        case West: return Right;
+        case North: return Down;
+        case East: return Left;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+const bool Board::isBall(const vec2i& pos) const {
+    return balls_.find(pos) != balls_.end();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+const bool Board::isBorder(const vec2i& pos) const {
+    return pos.x >= width_ || pos.x < 0 || pos.y >= height_ || pos.y < 0;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+const vector<vec2i> Board::getPath() const
 {
     //  initialise
     int dir = getPlayerDirection();
-    vec2i pos = getPlayerCoordinates();
+    vec2i pos = getPlayerCenter();
     
     //  compute path
     vector<vec2i> v;
@@ -259,4 +281,62 @@ vector<vec2i> Board::getPath()
     while (!isBorder(pos)); //we need at least one iteration to get out of the border
     
     return v;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+ostream& operator << (ostream& out, const Board::Side& side)
+{
+    switch (side)
+    {
+        case Board::South:
+            out << "south";
+            break;
+            
+        case Board::West:
+            out << "west";
+            break;
+            
+        case Board::North:
+            out << "north";
+            break;
+            
+        case Board::East:
+            out << "east";
+            break;
+            
+        default:
+            break;
+    }
+    
+    return out;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+ostream& operator << (ostream& out, const Board::Direction& dir)
+{
+    switch (dir)
+    {
+        case Board::Up:
+            out << "up";
+            break;
+            
+        case Board::Right:
+            out << "right";
+            break;
+            
+        case Board::Down:
+            out << "down";
+            break;
+            
+        case Board::Left:
+            out << "left";
+            break;
+            
+        default:
+            break;
+    }
+    
+    return out;
 }
