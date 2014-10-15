@@ -1,9 +1,9 @@
-#include "board.h"
+#include "Board.h"
 #include "common.h"
 
 #include <random>
 
-
+    
 ////////////////////////////////////////////////////////////////////////////////
 Board::Board(const int width,
              const int height,
