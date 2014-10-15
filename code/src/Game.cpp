@@ -140,6 +140,7 @@ void Game::guess()
             cout << "let me show you my world." << endl;
             cout << "================================================================================" << endl;
             
+            points_ = 0;
             flags_["path"] = true;
             flags_["balls"] = true;
             flags_["guessing"] = false;
