@@ -11,7 +11,7 @@ Board::Board(const int width,
     init(width, height);
     initBallsRandom(nballs);
     
-    _playerId = 0;
+    playerId_ = 0;
 }
 
 
@@ -19,38 +19,42 @@ Board::Board(const int width,
 void Board::init(const int width,
                  const int height)
 {
-    _balls.clear();
-    _width = width;
-    _height = height;
+    balls_.clear();
+    width_ = width;
+    height_ = height;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 void Board::initBallsRandom(const int nballs)
 {
-    _balls.clear();
+    balls_.clear();
     
     //  keep spwaning random balls until we have enough
-    while (_balls.size() <= nballs)
+    while (balls_.size() <= nballs)
     {
         vec2i pos;
-        pos.x = rand() % _width;
-        pos.y = rand() % _height;
+        pos.x = rand() % width_;
+        pos.y = rand() % height_;
         
-        //  only add ball if position is free
-        if (_balls.find(pos) != _balls.end()) {
-            _balls.insert(pos);
+        //  onlpos.y add ball if position is free
+        if (balls_.find(pos) != balls_.end()) {
+            balls_.insert(pos);
         }
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-void Board::movePlayerRight() { _playerId++; }
+void Board::movePlayerRight() { 
+    playerId_++; 
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
-void Board::movePlayerLeft() { _playerId--; }
+void Board::movePlayerLeft() { 
+    playerId_--; 
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,184 +62,179 @@ void Board::shoot() {}
 
 
 ////////////////////////////////////////////////////////////////////////////////
-Board::Side Board::getPlayerSide() // takes the position and returns the side
+const Board::Side Board::getPlayerSide() const // takes the position and returns the side
 {
-    int r;
-    r=_playerId % (2*(_width+_height)); //in case we did the full circle around the board
-    Side s;
-    if (r<_width) {
-        s=South;
+    int r = playerId_ % (2 * (width_ + height_)); //in case we did the full circle around the board
+
+    if (r < width_) {
+        return South;
+    } else if (r < width_ + height_) {
+        return West;
+    } else if (r < 2 * width_ + height_) {
+        return North;
+    } else {
+        return East;
     }
-    else if (r<_width+_height){
-        s=West;
-    }
-    else if (r<2*_width+_height){
-        s=North;
-    }
-    else if (r<2*(_width+_height)){
-        s=East;
-    }
-    return s;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-int Board::getPlayerPosition()
+const int Board::getPlayerPosition() const
 {
-    int r;
-    Side s;
-    r=_playerId % (2*(_width+_height));
-    s=getPlayerSide();
-    if(s==West){
-        r=r-_width;
+    int r = playerId_ % (2 * (width_ + height_));
+    Side s = getPlayerSide();
+
+    if(s == West) {
+        r -= width_;
+    } else if (s == North) {
+        r -= width_ + height_;
+    } else if (s == East) {
+        r -= 2 * width_ + height_;
     }
-    else if (s==North){
-        r=r-_width-_height;
-    }
-    else if (s==East){
-        r=r-2*_width-_height;
-    }
+    
     return r;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+const vec2i Board::getPlayerCoordinates() const
+{
+    const int id = getPlayerPosition();
+    
+    switch (getPlayerSide())
+    {
+        case South: return vec2i(id, height_);
+        case West: return vec2i(width_, id);
+        case North: return vec2i(width_ - 1 - id, -1);
+        case East: return vec2i(-1, height_ - 1 - id);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+const Board::Direction Board::getPlayerDirection() const
+{
+    switch (getPlayerSide())
+    {
+        case South: return Up;
+        case West: return Right;
+        case North: return Down;
+        case East: return Left;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+const bool Board::isBall(const vec2i& pos) const {
+    return balls_.find(pos) != balls_.end();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+const bool Board::isBorder(const vec2i& pos) const {
+    return pos.x >= width_ || pos.x < 0 || pos.y >= height_ || pos.y < 0;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+int turn(const int dir, const int nturns) {
+    const int sum = dir + nturns;
+    return (sum < 0) ? (sum % 4 + 4) : (sum % 4);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+vec2i move(const vec2i& pos, const int dir)
+{
+    switch (dir)
+    {
+        case Board::Up:
+            return vec2i(pos.x, pos.y - 1);
+            break;
+            
+        case Board::Right:
+            return vec2i(pos.x + 1, pos.y);
+            break;
+            
+        case Board::Down:
+            return vec2i(pos.x, pos.y + 1);
+            break;
+            
+        case Board::Left:
+            return vec2i(pos.x - 1, pos.y);
+            break;
+            
+        default:
+            return pos;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+vec2i left(const vec2i& pos, const int dir) {
+    return move(pos, turn(dir, -1));
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+vec2i right(const vec2i& pos, const int dir) {
+    return move(pos, turn(dir, 1));
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+vec2i down(const vec2i& pos, const int dir) {
+    return move(pos, turn(dir, 2));
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 vector<vec2i> Board::getPath()
 {
-    vec2i current_point;
-    Side s;
-    s=getPlayerSide();
-    int x; int y;
-    Direction d;
+    //  initialise
+    int dir = getPlayerDirection();
+    vec2i pos = getPlayerCoordinates();
+    
+    //  compute path
     vector<vec2i> v;
     
-    //Initialisation
-    if (s==South) {
-        y=_height;
-        x=getPlayerPosition();
-        d=Up;
-    }
-    else if(s==West){
-        x=_width;
-        y=_height - 1 - getPlayerPosition();
-        d=Left;
-    }
-    else if (s==North){
-        x =_width - 1 - getPlayerPosition();
-        y = -1;
-        d=Down;
-    }
-    else if (s==East){
-        x=-1;
-        y=getPlayerPosition();
-        d=Right;
-    }
-    current_point.x = x;
-    current_point.y = y;
-    
-    
-    //Computing the next point
-    
-    do{
-    if (d==Up) {
+    do
+    {
+        const vec2i step = move(pos, dir);
         
-        if (_balls.find(vec2i(current_point.x,current_point.y-1))==_balls.end()){
-            v.push_back(current_point);
-            d=Down; //the U-turn is checked first
+        const bool front = isBall(step);
+        const bool frontLeft = isBall(left(step, dir));
+        const bool frontRight = isBall(right(step, dir));
+        
+        //  hit
+        if (front) {
+            v.push_back(step);
+            return v;
         }
-        else if (_balls.find(vec2i(current_point.x+1,current_point.y-1))==_balls.end()){
-            v.push_back(current_point);
-            if (_balls.find(vec2i(current_point.x-1,current_point.y-1))==_balls.end()){
-                d=Down;
-            }
-            else{
-                d=Left;
-            }
-            
+        //  u-turn on border
+        else if (isBorder(pos) && (frontLeft || frontRight)) {
+            return vector<vec2i>();
         }
-        else if (_balls.find(vec2i(current_point.x-1,current_point.y-1))==_balls.end()){
-            v.push_back(current_point);
-            d=Right;
+        //  u-turn in field
+        else if (frontLeft && frontRight) {
+            v.push_back(pos);
+            dir = turn(dir, 2);
         }
-        else{
-            current_point.y=current_point.y+1; //if no ball is stopping you, just go for it !
+        //  right deflection
+        else if (frontLeft) {
+            v.push_back(pos);
+            dir = turn(dir, 1);
         }
-    }
-    
-    else if (d==Down){
-        if (_balls.find(vec2i(current_point.x,current_point.y+1))==_balls.end()){
-            v.push_back(current_point);
-            d=Up;
-        }
-        else if (_balls.find(vec2i(current_point.x+1,current_point.y+1))==_balls.end()){
-            v.push_back(current_point);
-            if (_balls.find(vec2i(current_point.x-1,current_point.y+1))==_balls.end()){
-                d=Up;
-            }
-            else{
-                d=Left;
-            }
-            
-        }
-        else if (_balls.find(vec2i(current_point.x-1,current_point.y+1))==_balls.end()){
-            v.push_back(current_point);
-            d=Right;
-        }
-        else{
-            current_point.y=current_point.y-1;
+        //  left deflection
+        else if (frontRight) {
+            v.push_back(pos);
+            dir = turn(dir, -1);
+        //  no balls, pass streight through
+        } else {
+            pos.y--;
         }
     }
-    
-    else if (d==Right){
-        if (_balls.find(vec2i(current_point.x+1,current_point.y))==_balls.end()){
-            v.push_back(current_point);
-            d=Left;
-        }
-        else if (_balls.find(vec2i(current_point.x+1,current_point.y+1))==_balls.end()){
-            v.push_back(current_point);
-            if (_balls.find(vec2i(current_point.x+1,current_point.y-1))==_balls.end()){
-                d=Left;
-            }
-            else{
-                d=Up;
-            }
-            
-        }
-        else if (_balls.find(vec2i(current_point.x+1,current_point.y-1))==_balls.end()){
-            v.push_back(current_point);
-            d=Down;
-        }
-        else{
-            current_point.x=current_point.x+1;
-        }
-    }
-    
-    else if (d==Left){
-        if (_balls.find(vec2i(current_point.x-1,current_point.y))==_balls.end()){
-            v.push_back(current_point);
-            d=Right;
-        }
-        else if (_balls.find(vec2i(current_point.x-1,current_point.y+1))==_balls.end()){
-            v.push_back(current_point);
-            if (_balls.find(vec2i(current_point.x-1,current_point.y-1))==_balls.end()){
-                d=Right;
-            }
-            else{
-                d=Up;
-            }
-            
-        }
-        else if (_balls.find(vec2i(current_point.x-1,current_point.y-1))==_balls.end()){
-            v.push_back(current_point);
-            d=Down;
-        }
-        else{
-            current_point.x=current_point.x-1;
-        }
-    }
-    }
-    while (current_point.x != -1 or current_point.x != 8 or current_point.y != -1 or current_point.y != 8); //we need at least one iteration to get out of the border
-    
-    
+    while (!isBorder(pos)); //we need at least one iteration to get out of the border
     
     return v;
 }

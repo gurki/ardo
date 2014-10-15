@@ -1,26 +1,11 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include <vector>
-#include <unordered_set>
+#include "vector.h"
+
+#include <set>
 
 using namespace std;
-
-
-////////////////////////////////////////////////////////////////////////////////
-template <class T>
-class vec2
-{
-    public:
-    
-        vec2(const T x_ = 0, const T y_ = 0) : x(x_), y(y_) {};
-    
-        T x;
-        T y;
-};
-
-
-typedef vec2<int> vec2i;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -35,13 +20,12 @@ class Board
             West
         };
     
-    enum Direction {
-        Up,
-        Right,
-        Left,
-        Down
-    };
-    
+        enum Direction {
+            Up,
+            Right,
+            Left,
+            Down
+        };
     
         Board(const int width = 8,
               const int height = 8,
@@ -56,19 +40,24 @@ class Board
     
         void shoot();
     
-        Side getPlayerSide();
-        int getPlayerPosition();
+        const Side getPlayerSide() const;
+        const int getPlayerPosition() const;
+        const vec2i getPlayerCoordinates() const;
+        const Direction getPlayerDirection() const;
+
+        const bool isBall(const vec2i& pos) const;
+        const bool isBorder(const vec2i& pos) const;
     
         vector<vec2i> getPath();
     
     
     private:
     
-        unordered_set<vec2i> _balls;
+        set<vec2i> balls_;
     
-        int _playerId;
-        int _width;
-        int _height;
+        int playerId_;
+        int width_;
+        int height_;
 };
 
 
