@@ -23,9 +23,11 @@ class Game
              const sf::ContextSettings& settings
         );
     
+        void reset();
         void update();
         void render();
         void handleEvents();
+        void toggleFullscreen();
     
         void shoot();
         void guess();

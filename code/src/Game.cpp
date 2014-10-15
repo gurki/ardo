@@ -149,6 +149,29 @@ void Game::guess()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+void Game::reset() {
+    board_.initBallsRandom(5);
+    flags_["balls"] = false;
+    flags_["path"] = false;
+    flags_["guessing"] = false;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Game::toggleFullscreen()
+{
+    if (flags_["fullscreen"]) {
+        window_->create(windowMode_, windowTitle_, sf::Style::Default, windowSettings_);
+    } else {
+        sf::VideoMode mode = sf::VideoMode::getFullscreenModes()[0];
+        window_->create(mode, windowTitle_, sf::Style::Fullscreen, windowSettings_);
+    }
+    
+    flags_["fullscreen"] = !flags_["fullscreen"];
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 void Game::handleEvents()
 {
     //  process events
@@ -197,9 +220,7 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             
         //  spawn new balls
         case sf::Keyboard::R:
-            board_.initBallsRandom(5);
-            flags_["balls"] = false;
-            flags_["path"] = false;
+            reset();
             break;
             
         //  shoot
@@ -209,17 +230,8 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             
         //  fullscreen
         case sf::Keyboard::F:
-        {
-            if (flags_["fullscreen"]) {
-                window_->create(windowMode_, windowTitle_, sf::Style::Default, windowSettings_);
-            } else {
-                sf::VideoMode mode = sf::VideoMode::getFullscreenModes()[0];
-                window_->create(mode, windowTitle_, sf::Style::Fullscreen, windowSettings_);
-            }
-            
-            flags_["fullscreen"] = !flags_["fullscreen"];
+            toggleFullscreen();
             break;
-        }
             
         //  balls
         case sf::Keyboard::B:
