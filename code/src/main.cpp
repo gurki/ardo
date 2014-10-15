@@ -81,7 +81,8 @@ int main(int argc, char* argv[])
                     //  shoot
                     case sf::Keyboard::Space:
                     {
-                        cout << "SHOOT!" << endl;
+//                        cout << "SHOOT!" << endl;
+//                        cout << board.getPath() << endl;
                         Sound& soundObj = soundRenderer.spawnSound();
                         soundObj.setPath(board.getPath());
                         break;

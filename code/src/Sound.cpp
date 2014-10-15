@@ -8,7 +8,7 @@ Sound::Sound(FMOD::Channel* channel, FMOD::Sound* sound, FMOD::DSP* dsp)
     sound_ = sound;
     dsp_ = dsp;
     
-    nextAnchor_ = -1;
+    nextAnchor_ = 0;
     velocity_ = 10.0f;
 }
 
@@ -26,6 +26,8 @@ void Sound::stop()
 void Sound::setPath(const vector<vec2i>& path)
 {
     if (path.empty()) {
+        cout << "empty path" << endl;
+        nextAnchor_ = -1;
         return;
     }
     
@@ -61,7 +63,7 @@ void Sound::update(const float dt)
     
     vec2f d2 = vec2f(next.x - position_.x, next.y - position_.y);
     
-    if (dot(d1, d2) < 0)
+    if (dot(d1, d2) <= 0)
     {
         position_ = vec2f(next.x, next.y);
         nextAnchor_++;
@@ -81,13 +83,13 @@ void Sound::update(const float dt)
 
 ////////////////////////////////////////////////////////////////////////////////
 const bool Sound::isAlive() const {
-    return path_.empty() || isMoving();
+    return nextAnchor_ >= 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 const bool Sound::isMoving() const {
-    return nextAnchor_ >= 0;
+    return nextAnchor_ > 0;
 }
 
 

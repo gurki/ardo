@@ -264,20 +264,24 @@ const vector<vec2i> Board::getPath() const
         //  u-turn in field
         else if (frontLeft && frontRight) {
             dir = turn(dir, 2);
+            pos = move(pos, dir);
         }
         //  right deflection
         else if (frontLeft) {
             dir = turn(dir, 1);
+            pos = move(pos, dir);
         }
         //  left deflection
         else if (frontRight) {
             dir = turn(dir, -1);
+            pos = move(pos, dir);
         //  no balls, pass streight through
         } else {
             pos = step;
         }
         
         if (isBorder(pos)) {
+            v.push_back(pos);
             break;
         }
     }
