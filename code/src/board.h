@@ -27,18 +27,21 @@ class Board
             Down
         };
     
-        Board(const int width = 8,
-              const int height = 8,
-              const int nballs = 5);
+        Board(const int width, const int height, const int nballs = 0);
     
-        void init(const int width = 8,
-                  const int height = 8);
-        void initBallsRandom(const int nballs = 5);
+        void init(const int width, const int height);
+        void initBallsRandom(const int nballs);
+    
+        void addBall(const vec2i& pos);
+        void removeBall(const vec2i& pos);
     
         void movePlayerRight();
         void movePlayerLeft();
-    
+        void setPlayerPosition(const int pos) { playerId_ = pos; };
         void shoot();
+    
+        const int getWidth() const { return width_; };
+        const int getHeight() const { return height_; };
     
         const Side getPlayerSide() const;
         const int getPlayerPosition() const;

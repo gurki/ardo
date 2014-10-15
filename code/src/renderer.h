@@ -14,8 +14,8 @@ class Renderer
         
         Renderer() {};
         
-        void drawBoard(const sf::Window& window, const Board& board) {};
-        void drawSound(const sf::Window& window, const Sound& sound) {};
+        void drawBoard(const Board& board) const;
+        void drawSound(const Sound& sound) const {};
 };
 
 
