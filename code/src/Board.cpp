@@ -50,94 +50,24 @@ void Board::initBallsRandom(const int nballs)
 void Board::addBall(const vec2i &pos) {
     if (!isBorder(pos)) {
         balls_.insert(pos);
-    };
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-void Board::removeBall(const vec2i &pos) {
-    balls_.erase(pos);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-void Board::movePlayerRight() { 
-    playerId_++; 
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-void Board::movePlayerLeft() { 
-    playerId_--; 
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-void Board::shoot()
-{
-    /*
-     TODO
-     set and initiate sound moving?
-     we'll see ...
-     also, keep track of points and handle win/loose
-     */
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-int turn(const int dir, const int nturns) {
-    const int sum = dir + nturns;
-    return (sum < 0) ? (sum % 4 + 4) : (sum % 4);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-vec2i move(const vec2i& pos, const int dir)
-{
-    switch (dir)
-    {
-        case Board::Up:
-            return vec2i(pos.x, pos.y - 1);
-            break;
-            
-        case Board::Right:
-            return vec2i(pos.x + 1, pos.y);
-            break;
-            
-        case Board::Down:
-            return vec2i(pos.x, pos.y + 1);
-            break;
-            
-        case Board::Left:
-            return vec2i(pos.x - 1, pos.y);
-            break;
-            
-        default:
-            return pos;
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-vec2i left(const vec2i& pos, const int dir) {
-    return move(pos, turn(dir, -1));
+void Board::addGuess(const vec2i &pos)
+{
+    //  only add guess if
+    //      - the position is on the board
+    //      - there are balls to guess left
+    if (!isBorder(pos) && guesses_.size() < balls_.size()) {
+        guesses_.insert(pos);
+    }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-vec2i right(const vec2i& pos, const int dir) {
-    return move(pos, turn(dir, 1));
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-vec2i down(const vec2i& pos, const int dir) {
-    return move(pos, turn(dir, 2));
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-const Board::Side Board::getPlayerSide() const // takes the position and returns the side
+const Side Board::getPlayerSide() const // takes the position and returns the side
 {
     const int nfields = 2 * (width_ + height_);
     
@@ -208,7 +138,7 @@ const vec2i Board::getPlayerEyes() const { //gives where the player is looking a
 
 
 ////////////////////////////////////////////////////////////////////////////////
-const Board::Direction Board::getPlayerDirection() const
+const Direction Board::getPlayerDirection() const
 {
     switch (getPlayerSide())
     {
@@ -292,23 +222,23 @@ const vector<vec2i> Board::getPath() const
 
 
 ////////////////////////////////////////////////////////////////////////////////
-ostream& operator << (ostream& out, const Board::Side& side)
+ostream& operator << (ostream& out, const Side& side)
 {
     switch (side)
     {
-        case Board::South:
+        case South:
             out << "south";
             break;
             
-        case Board::West:
+        case West:
             out << "west";
             break;
             
-        case Board::North:
+        case North:
             out << "north";
             break;
             
-        case Board::East:
+        case East:
             out << "east";
             break;
             
@@ -321,23 +251,23 @@ ostream& operator << (ostream& out, const Board::Side& side)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-ostream& operator << (ostream& out, const Board::Direction& dir)
+ostream& operator << (ostream& out, const Direction& dir)
 {
     switch (dir)
     {
-        case Board::Up:
+        case Up:
             out << "up";
             break;
             
-        case Board::Right:
+        case Right:
             out << "right";
             break;
             
-        case Board::Down:
+        case Down:
             out << "down";
             break;
             
-        case Board::Left:
+        case Left:
             out << "left";
             break;
             

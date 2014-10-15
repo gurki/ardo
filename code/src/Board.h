@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "vector.h"
+#include "Object.h"
 
 #include <unordered_set>
 
@@ -14,36 +15,29 @@ class Board
 {
     public:
     
-        enum Side {         //  order is important!
-            North,
-            East,
-            South,
-            West
-        };
-    
-        enum Direction {    //  order is important!
-            Down,
-            Left,
-            Up,
-            Right
-        };
-    
         Board(const int width, const int height, const int nballs = 0);
     
         void init(const int width, const int height);
-        void initBallsRandom(const int nballs);
     
         void addBall(const vec2i& pos);
-        void removeBall(const vec2i& pos);
+        void removeBall(const vec2i& pos) { balls_.erase(pos); };
+        void initBallsRandom(const int nballs);
+
+        void addGuess(const vec2i& pos);
+        void removeGuess(const vec2i& pos) { guesses_.erase(pos); };
+        void clearGuesses() { guesses_.clear(); };
     
-        void movePlayerRight();
-        void movePlayerLeft();
+        void movePlayerRight() { playerId_++; };
+        void movePlayerLeft() { playerId_--; };
         void setPlayerPosition(const int pos) { playerId_ = pos; };
-    
-        void shoot();
     
         const int getWidth() const { return width_; };
         const int getHeight() const { return height_; };
+        const unordered_set<vec2i>& getBalls() const { return balls_; };
+        const unordered_set<vec2i>& getGuesses() const { return guesses_; };
+    
+        const bool isBall(const vec2i& pos) const;
+        const bool isBorder(const vec2i& pos) const;
     
         const Side getPlayerSide() const;
         const int getPlayerPosition() const;
@@ -51,15 +45,13 @@ class Board
         const vec2i getPlayerEyes() const;
         const Direction getPlayerDirection() const;
 
-        const bool isBall(const vec2i& pos) const;
-        const bool isBorder(const vec2i& pos) const;
-    
         const vector<vec2i> getPath() const;
-        const unordered_set<vec2i>& getBalls() const { return balls_; };
+    
     
     private:
     
         unordered_set<vec2i> balls_;
+        unordered_set<vec2i> guesses_;
     
         int playerId_;
         int width_;
@@ -67,8 +59,8 @@ class Board
 };
 
 
-ostream& operator << (ostream& out, const Board::Side& side);
-ostream& operator << (ostream& out, const Board::Direction& dir);
+ostream& operator << (ostream& out, const Side& side);
+ostream& operator << (ostream& out, const Direction& dir);
 ostream& operator << (ostream& out, const vector<vec2i>& v);
 
 

@@ -10,6 +10,7 @@
 		2019066819DEDC3E0066A962 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2019066719DEDC3E0066A962 /* OpenGL.framework */; };
 		203B0B5F19EE3C11008C629B /* SoundRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 203B0B5D19EE3C11008C629B /* SoundRenderer.cpp */; };
 		2095418819EEFC9500508378 /* Game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2095418619EEFC9500508378 /* Game.cpp */; };
+		2095418B19EF19EF00508378 /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2095418A19EF19EF00508378 /* Object.cpp */; };
 		20AB278419DEF12000CA569C /* libsfml-audio.2.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 20AB277419DEF12000CA569C /* libsfml-audio.2.1.dylib */; };
 		20AB278519DEF12000CA569C /* libsfml-audio.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 20AB277519DEF12000CA569C /* libsfml-audio.2.dylib */; };
 		20AB278619DEF12000CA569C /* libsfml-audio.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 20AB277619DEF12000CA569C /* libsfml-audio.dylib */; };
@@ -51,6 +52,8 @@
 		203B0B5E19EE3C11008C629B /* SoundRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SoundRenderer.h; path = src/SoundRenderer.h; sourceTree = SOURCE_ROOT; };
 		2095418619EEFC9500508378 /* Game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Game.cpp; path = src/Game.cpp; sourceTree = SOURCE_ROOT; };
 		2095418719EEFC9500508378 /* Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Game.h; path = src/Game.h; sourceTree = SOURCE_ROOT; };
+		2095418919EF17EA00508378 /* Object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Object.h; path = src/Object.h; sourceTree = SOURCE_ROOT; };
+		2095418A19EF19EF00508378 /* Object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Object.cpp; path = src/Object.cpp; sourceTree = SOURCE_ROOT; };
 		20AB277419DEF12000CA569C /* libsfml-audio.2.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-audio.2.1.dylib"; path = "libs/libsfml-audio.2.1.dylib"; sourceTree = "<group>"; };
 		20AB277519DEF12000CA569C /* libsfml-audio.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-audio.2.dylib"; path = "libs/libsfml-audio.2.dylib"; sourceTree = "<group>"; };
 		20AB277619DEF12000CA569C /* libsfml-audio.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-audio.dylib"; path = "libs/libsfml-audio.dylib"; sourceTree = "<group>"; };
@@ -155,9 +158,11 @@
 			isa = PBXGroup;
 			children = (
 				20E1E1E419EE09BA0092EE25 /* common.h */,
+				20B5A18719EDE50B009DD76F /* Vector.h */,
+				2095418919EF17EA00508378 /* Object.h */,
+				2095418A19EF19EF00508378 /* Object.cpp */,
 				2095418719EEFC9500508378 /* Game.h */,
 				2095418619EEFC9500508378 /* Game.cpp */,
-				20B5A18719EDE50B009DD76F /* Vector.h */,
 				20AB279419DEF13A00CA569C /* Board.h */,
 				20AB279319DEF13A00CA569C /* Board.cpp */,
 				20AB279719DEF13A00CA569C /* Renderer.h */,
@@ -231,6 +236,7 @@
 				20AB279A19DEF13A00CA569C /* Renderer.cpp in Sources */,
 				203B0B5F19EE3C11008C629B /* SoundRenderer.cpp in Sources */,
 				2095418819EEFC9500508378 /* Game.cpp in Sources */,
+				2095418B19EF19EF00508378 /* Object.cpp in Sources */,
 				20AB279819DEF13A00CA569C /* Board.cpp in Sources */,
 				20AB279D19DEF31900CA569C /* Sound.cpp in Sources */,
 			);
