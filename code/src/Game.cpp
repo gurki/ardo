@@ -25,6 +25,7 @@ Game::Game(
     //  initialise world
 //    board_.init(8, 8);
 //    board_.initBallsRandom(5);
+    soundRenderer_.game = this;
     
     clock_.restart();
 }
@@ -85,8 +86,8 @@ void Game::shoot()
     const vector<vec2i> path = board_.getPath(false);
     
     //  spawn and shoot sound
-    Sound& soundObj = soundRenderer_.spawnSound();
-    soundObj.setPath(path);
+//    Sound& soundObj = soundRenderer_.spawnSound();
+//    soundObj.setPath(path);
     
     //  keep track of points
     const vec2i& first = *path.begin();

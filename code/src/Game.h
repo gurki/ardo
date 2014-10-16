@@ -32,6 +32,8 @@ class Game
         void shoot();
         void guess();
     
+        const Board& getBoard() { return board_; };
+    
         const bool isRunning() const { return flags_.at("running"); };
 
     

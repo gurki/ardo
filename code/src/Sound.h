@@ -9,11 +9,14 @@
 #include <fmod_errors.h>
 
 
+class SoundRenderer;
+
+
 class Sound
 {
     public:
     
-        Sound(FMOD::Channel* channel, FMOD::Sound* sound = nullptr, FMOD::DSP* dsp = nullptr);
+        Sound(FMOD::Sound* sound, SoundRenderer* soundRenderer);
     
         void setPath(const vector<vec2i>& path);
         void update(const float dt);
@@ -25,6 +28,8 @@ class Sound
 
     
     private:
+    
+        SoundRenderer* soundRenderer_;
     
         FMOD::Channel* channel_;
         FMOD::Sound* sound_;

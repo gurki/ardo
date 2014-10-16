@@ -1,4 +1,5 @@
 #include "SoundRenderer.h"
+#include "Game.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,8 +58,8 @@ Sound& SoundRenderer::spawnSound()
     result_ = system_->playDSP(FMOD_CHANNEL_FREE, dsp, false, &channel); FMOD::check(result_);
     result_ = channel->setMode(FMOD_3D); FMOD::check(result_);
  
-    Sound soundObj(channel, sound, dsp);
-    sounds_.push_back(soundObj);
+//    Sound soundObj(channel, sound, dsp);
+//    sounds_.push_back(soundObj);
     
     return sounds_.back();
 }
@@ -88,7 +89,7 @@ void SoundRenderer::clear() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void SoundRenderer::playSound(const vec3f &position, const vec3f& velocity, FMOD::Sound* sound)
-{
+{    
     FMOD::Channel* channel;
     system_->playSound(FMOD_CHANNEL_FREE, sound, true, &channel);
     
@@ -106,16 +107,13 @@ void SoundRenderer::playSound(const vec3f &position, const vec3f& velocity, FMOD
 void SoundRenderer::update(const float dt)
 {
     //  update sound balls
-    for(auto iter = sounds_.begin(); iter != sounds_.end();)
-    {
-        iter->update(dt);
-        
-        if(!iter->isAlive()) {
-            iter->stop();
-            iter = sounds_.erase(iter);
-        } else {
-            ++iter;
-        }
+    if (sounds_.size() >= 64) {
+        sounds_.front().stop();
+        sounds_.pop_front();
+    }
+    
+    for (auto& sound : sounds_) {
+        sound.update(dt);
     }
     
     //  remove finished channels of one shot sounds
@@ -142,7 +140,7 @@ void SoundRenderer::update(const float dt)
     
     //  compute mean amplitude
     const int nsamples = 1000;
-    const int thresh = -3;
+    const int thresh = -7;
     
     float data[nsamples];
     channel_->getWaveData(data, nsamples, 0);
@@ -165,7 +163,8 @@ void SoundRenderer::update(const float dt)
             return;
         }
         
-        shotSound_ = createBuffer();
+        //  record following audio to seperate buffer
+        shotSound_ = createBuffer(10);
         
         system_->recordStop(0);
         system_->recordStart(0, shotSound_, false);
@@ -173,24 +172,28 @@ void SoundRenderer::update(const float dt)
         channel_->stop();
         system_->playSound(FMOD_CHANNEL_REUSE, shotSound_, false, &channel_);
         
+        //  spawn sound with recording
+        game->shoot();
+        Sound sound(shotSound_, this);
+        sound.setPath(game->getBoard().getPath(false));
+        sounds_.push_back(sound);
+        
         isRecording_ = true;
-        cout << "start" << endl;
+//        cout << "start" << endl;
     }
     //  detect end of input
     else if (isRecording_ && amplitude <= thresh && amplitude > -100)
     {
-        clock.restart();
-        
+        //  switch back to listening
         system_->recordStop(0);
         system_->recordStart(0, sound_, true);
 
         channel_->stop();
         system_->playSound(FMOD_CHANNEL_FREE, sound_, false, &channel_);
         
-        //  spawn sound with recording
-        
+        clock.restart();
         isRecording_ = false;
-        cout << "end " << position << endl;
+//        cout << "end " << position << endl;
     }
     
     result_ = system_->update(); FMOD::check(result_);

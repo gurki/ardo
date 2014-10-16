@@ -11,7 +11,9 @@
 #include <fmod_errors.h>
 
 #include <vector>
+#include <deque>
 
+class Game;
 
 ////////////////////////////////////////////////////////////////////////////////
 class SoundRenderer
@@ -37,13 +39,15 @@ class SoundRenderer
     
         void clear();
         void update(const float dt);
+    
+        Game* game;
  
     
     private:
     
         FMOD::Sound* createBuffer(const float duration = 3.0f) const;
     
-        vector<Sound> sounds_;
+        deque<Sound> sounds_;
         vector<FMOD::Channel*> channels_;
     
         bool isRecording_;

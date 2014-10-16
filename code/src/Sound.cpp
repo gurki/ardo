@@ -1,12 +1,12 @@
 #include "Sound.h"
+#include "SoundRenderer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
-Sound::Sound(FMOD::Channel* channel, FMOD::Sound* sound, FMOD::DSP* dsp)
+Sound::Sound(FMOD::Sound* sound, SoundRenderer* soundRenderer)
 {
-    channel_ = channel;
     sound_ = sound;
-    dsp_ = dsp;
+    soundRenderer_ = soundRenderer;
     
     nextAnchor_ = 0;
     velocity_ = 10;
@@ -35,7 +35,7 @@ void Sound::setPath(const vector<vec2i>& path)
         return;
     }
     
-    nextAnchor_ = 0;
+    nextAnchor_ = 1;
     position_ = vec2f(path[0].x, path[0].y);
     
     if (path.size() > 1) {
@@ -75,16 +75,17 @@ void Sound::update(const float dt)
     {
         position_ = vec2f(next.x, next.y);
         nextAnchor_++;
-        
-        float value;
-        dsp_->getParameter(FMOD_DSP_OSCILLATOR_RATE, &value, nullptr, 0);
-        dsp_->setParameter(FMOD_DSP_OSCILLATOR_RATE, value * 1.1f);
-    }
     
-    //  update sound position and velocity accordingly
-    FMOD_VECTOR fpos = {static_cast<float>(position_.x), 0.5f, static_cast<float>(position_.y)};
-    FMOD_VECTOR fvel = {static_cast<float>(v.x), 0, static_cast<float>(v.y)};
-    channel_->set3DAttributes(&fpos, &fvel);
+        //  turn! play sound
+        vec3f pos(position_.x, 0.5f, position_.y);
+        vec3f vel(0, 0, 0);
+        
+        soundRenderer_->playSound(pos, vel, sound_);
+        
+//        float value;
+//        dsp_->getParameter(FMOD_DSP_OSCILLATOR_RATE, &value, nullptr, 0);
+//        dsp_->setParameter(FMOD_DSP_OSCILLATOR_RATE, value * 1.1f);
+    }
 }
 
 
