@@ -32,8 +32,7 @@ class SoundRenderer
         ~SoundRenderer();
     
         void setListenerState(const Renderer::State& state);
-        void setListening(const bool listening);
-    
+        void playSound(const vec3f& position, const vec3f& velocity, FMOD::Sound* sound);
         Sound& spawnSound();
     
         void clear();
@@ -45,15 +44,13 @@ class SoundRenderer
         FMOD::Sound* createBuffer(const float duration = 3.0f) const;
     
         vector<Sound> sounds_;
+        vector<FMOD::Channel*> channels_;
     
-        bool isListening_;
         bool isRecording_;
     
         FMOD::Sound* sound_;
+        FMOD::Sound* shotSound_;
         FMOD::Channel* channel_;
-    
-        FMOD::Sound* newSound_;
-        FMOD::Channel* newChannel_;
     
         FMOD_RESULT result_;
         FMOD::System* system_;

@@ -11,7 +11,8 @@ SoundRenderer::SoundRenderer()
     result_ = system_->init(64, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0); FMOD::check(result_);
     
     sound_ = createBuffer();
-    setListening(true);
+    system_->recordStart(0, sound_, true);
+    system_->playSound(FMOD_CHANNEL_FREE, sound_, false, &channel_);
 }
 
 
@@ -80,32 +81,31 @@ void SoundRenderer::setListenerState(const Renderer::State& state)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-void SoundRenderer::setListening(const bool listening)
-{
-    isListening_ = listening;
-    
-    if (isListening_)
-    {
-        system_->recordStart(0, sound_, true);
-        system_->playSound(FMOD_CHANNEL_FREE, sound_, false, &channel_);
-    } else {
-        system_->recordStop(0);
-        channel_->stop();
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
 void SoundRenderer::clear() {
     sounds_.clear();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
+void SoundRenderer::playSound(const vec3f &position, const vec3f& velocity, FMOD::Sound* sound)
+{
+    FMOD::Channel* channel;
+    system_->playSound(FMOD_CHANNEL_FREE, sound, true, &channel);
+    
+    FMOD_VECTOR pos = {position.x, position.y, position.z};
+    FMOD_VECTOR vel = {velocity.x, velocity.y, velocity.z};
+    channel->set3DAttributes(&pos, &vel);
+    channel->setMode(FMOD_3D | FMOD_LOOP_OFF);
+    channel->setPaused(false);
+    
+    channels_.push_back(channel);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 void SoundRenderer::update(const float dt)
 {
-    result_ = system_->update(); FMOD::check(result_);
-    
+    //  update sound balls
     for(auto iter = sounds_.begin(); iter != sounds_.end();)
     {
         iter->update(dt);
@@ -118,66 +118,82 @@ void SoundRenderer::update(const float dt)
         }
     }
     
-    //  record
-//    system_->isRecording(0, &isListening_);
+    //  remove finished channels of one shot sounds
+    for(auto iter = channels_.begin(); iter != channels_.end();)
+    {
+        bool isPlaying = false;
+        (*iter)->isPlaying(&isPlaying);
+        
+        if(!isPlaying) {
+            iter = channels_.erase(iter);
+        } else {
+            ++iter;
+        }
+    }
     
-//    if (isListening_)
-//    {
-        //  synchronize channel with recording
-        unsigned int position;
-        system_->getRecordPosition(0, &position);
-        channel_->setPosition(position, FMOD_TIMEUNIT_PCM);
-        
-        //  compute mean amplitude
-        const int nsamples = 1000;
-        const int thresh = -4;
-        
-        float data[nsamples];
-        channel_->getWaveData(data, nsamples, 0);
+    //  detect microphone input
+    static sf::Clock clock;
     
-        float max = -numeric_limits<float>::max();
-        float min = numeric_limits<float>::max();
-        
-        for (int i = 0; i < nsamples; i++) {
-            max = data[i] > max ? data[i] : max;
-            min = data[i] < min ? data[i] : min;
+    //  synchronize channel with recording
+    unsigned int position;
+    system_->getRecordPosition(0, &position);
+    channel_->setPosition(position, FMOD_TIMEUNIT_PCM);
+    channel_->setVolume(0);
+    
+    //  compute mean amplitude
+    const int nsamples = 1000;
+    const int thresh = -3;
+    
+    float data[nsamples];
+    channel_->getWaveData(data, nsamples, 0);
+
+    float max = -numeric_limits<float>::max();
+    float min = numeric_limits<float>::max();
+    
+    for (int i = 0; i < nsamples; i++) {
+        max = data[i] > max ? data[i] : max;
+        min = data[i] < min ? data[i] : min;
+    }
+    
+    float amplitude = log(max - min);
+
+    //  detect start of input
+    if (!isRecording_ && amplitude > thresh)
+    {
+        //  wait a certain amount of time between shots
+        if (clock.getElapsedTime().asSeconds() < 0.1f) {
+            return;
         }
         
-        float amplitude = log(max - min);
-
-        //  detect start of input
-        if (!isRecording_ && amplitude > thresh)
-        {
-            newSound_ = createBuffer();
-            
-            system_->recordStop(0);
-            system_->recordStart(0, newSound_, false);
-
-            channel_->stop();
-            system_->playSound(FMOD_CHANNEL_REUSE, newSound_, false, &channel_);
-            
-            isRecording_ = true;
-            
-            cout << "start: " << position << endl;
-        }
-        //  detect end of input
-        else if (isRecording_ && amplitude <= thresh && amplitude > -100)
-        {
-            system_->recordStop(0);
-            system_->recordStart(0, sound_, true);
-
-            channel_->stop();
-            system_->playSound(FMOD_CHANNEL_FREE, sound_, false, &channel_);
-            
-            //  spawn sound with recording
-            
-            isRecording_ = false;
-            sf::sleep(sf::seconds(0.01f));
-            cout << "end: " << position << endl;
-        }
+        shotSound_ = createBuffer();
         
-//        sf::sleep(sf::seconds(0.1f));
-//    }
+        system_->recordStop(0);
+        system_->recordStart(0, shotSound_, false);
+
+        channel_->stop();
+        system_->playSound(FMOD_CHANNEL_REUSE, shotSound_, false, &channel_);
+        
+        isRecording_ = true;
+        cout << "start" << endl;
+    }
+    //  detect end of input
+    else if (isRecording_ && amplitude <= thresh && amplitude > -100)
+    {
+        clock.restart();
+        
+        system_->recordStop(0);
+        system_->recordStart(0, sound_, true);
+
+        channel_->stop();
+        system_->playSound(FMOD_CHANNEL_FREE, sound_, false, &channel_);
+        
+        //  spawn sound with recording
+        
+        isRecording_ = false;
+        cout << "end " << position << endl;
+    }
+    
+    result_ = system_->update(); FMOD::check(result_);
 }
 
 

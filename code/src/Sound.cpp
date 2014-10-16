@@ -19,6 +19,10 @@ void Sound::stop()
     if (channel_) {
         channel_->stop();
     }
+    
+    if (sound_) {
+        sound_->release();
+    }
 }
 
 
