@@ -98,6 +98,7 @@ void SoundRenderer::playSound(const vec3f &position, const vec3f& velocity, FMOD
     channel->set3DAttributes(&pos, &vel);
     channel->setMode(FMOD_3D | FMOD_LOOP_OFF);
     channel->setPaused(false);
+    channel->setSpeakerMix(5, 5, 5, 5, 5, 5, 5, 5);
     
     channels_.push_back(channel);
 }
@@ -173,7 +174,8 @@ void SoundRenderer::update(const float dt)
         system_->playSound(FMOD_CHANNEL_REUSE, shotSound_, false, &channel_);
         
         //  spawn sound with recording
-        const float velocity = 5 * (amplitude + 8);
+        const float velocity = 3 * (amplitude + 8);
+//        cout << velocity << endl;
         
         game->shoot();
         
