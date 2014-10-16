@@ -56,14 +56,16 @@ int main(int argc, char* argv[])
     
     FMOD::Sound* sound = 0;
     result_ = system_->createSound(0, FMOD_LOOP_NORMAL | FMOD_SOFTWARE | FMOD_OPENUSER, &exinfo, &sound); FMOD::check(result_);
-    
+
     //  record and play
     FMOD::Channel* channel = 0;
-    system_->recordStart(0, sound, true);
     system_->playSound(FMOD_CHANNEL_FREE, sound, false, &channel);
+    system_->recordStart(0, sound, true);
     
-    bool recording = false;
     sf::Clock clock;
+    int rec = 0;
+    unsigned int start = 0;
+    unsigned int end = 0;
     
     while (true)
     {
@@ -71,7 +73,10 @@ int main(int argc, char* argv[])
         
         unsigned int position;
         system_->getRecordPosition(0, &position);
-        channel->setPosition(position, FMOD_TIMEUNIT_PCM);
+        
+        if (rec < 2) {
+            channel->setPosition(position, FMOD_TIMEUNIT_PCM);
+        }
         
         //  compute mean amplitude
         const int nsamples = 1000;
@@ -90,14 +95,27 @@ int main(int argc, char* argv[])
         
         float amp = log(max - min);
         
-        if (!recording && amp > thresh) {
+        if (rec == 0 && amp > thresh)
+        {
+            cout << position << endl;
+//            system_->recordStop(0);
+//            system_->recordStart(0, sound1, true);
+            start = position;
+            rec = 1;
+            
             cout << clock.getElapsedTime().asSeconds() << ": start" << endl;
-            recording = true;
         }
-        
-        if (recording && amp <= thresh) {
+        else if (rec == 1 && amp <= thresh)
+        {
+            end = position;
+            cout<< position << endl;
+            
+            system_->recordStop(0);
+            channel->setLoopPoints(start, FMOD_TIMEUNIT_PCM, end, FMOD_TIMEUNIT_PCM);
+            channel->setLoopCount(-1);
+            rec = 2;
+            
             cout << clock.getElapsedTime().asSeconds() << ": stop" << endl;
-            recording = false;
         }
         
         sf::sleep(sf::seconds(0.01f));
@@ -105,3 +123,11 @@ int main(int argc, char* argv[])
     
     return 0;
 }
+
+
+
+
+
+
+
+
