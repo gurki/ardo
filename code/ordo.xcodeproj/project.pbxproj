@@ -30,6 +30,7 @@
 		20AB279919DEF13A00CA569C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20AB279519DEF13A00CA569C /* main.cpp */; };
 		20AB279A19DEF13A00CA569C /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20AB279619DEF13A00CA569C /* Renderer.cpp */; };
 		20AB279D19DEF31900CA569C /* Sound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20AB279B19DEF31900CA569C /* Sound.cpp */; };
+		20BD0D1919EF703400780243 /* Hud.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD0D1719EF703400780243 /* Hud.cpp */; };
 		20E1E1E319EE042A0092EE25 /* libfmodex.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 20E1E1E219EE042A0092EE25 /* libfmodex.dylib */; };
 		20E1E1E619EE15AB0092EE25 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20E1E1E519EE15AB0092EE25 /* GLUT.framework */; };
 /* End PBXBuildFile section */
@@ -77,6 +78,8 @@
 		20AB279B19DEF31900CA569C /* Sound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sound.cpp; path = src/Sound.cpp; sourceTree = SOURCE_ROOT; };
 		20AB279C19DEF31900CA569C /* Sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sound.h; path = src/Sound.h; sourceTree = SOURCE_ROOT; };
 		20B5A18719EDE50B009DD76F /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector.h; path = src/Vector.h; sourceTree = SOURCE_ROOT; };
+		20BD0D1719EF703400780243 /* Hud.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Hud.cpp; path = src/Hud.cpp; sourceTree = SOURCE_ROOT; };
+		20BD0D1819EF703400780243 /* Hud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Hud.h; path = src/Hud.h; sourceTree = SOURCE_ROOT; };
 		20E1E1E219EE042A0092EE25 /* libfmodex.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libfmodex.dylib; sourceTree = "<group>"; };
 		20E1E1E419EE09BA0092EE25 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = common.h; path = src/common.h; sourceTree = SOURCE_ROOT; };
 		20E1E1E519EE15AB0092EE25 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
@@ -171,6 +174,8 @@
 				20AB279B19DEF31900CA569C /* Sound.cpp */,
 				203B0B5E19EE3C11008C629B /* SoundRenderer.h */,
 				203B0B5D19EE3C11008C629B /* SoundRenderer.cpp */,
+				20BD0D1819EF703400780243 /* Hud.h */,
+				20BD0D1719EF703400780243 /* Hud.cpp */,
 				20AB279519DEF13A00CA569C /* main.cpp */,
 			);
 			path = ordo;
@@ -233,6 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				20AB279919DEF13A00CA569C /* main.cpp in Sources */,
+				20BD0D1919EF703400780243 /* Hud.cpp in Sources */,
 				20AB279A19DEF13A00CA569C /* Renderer.cpp in Sources */,
 				203B0B5F19EE3C11008C629B /* SoundRenderer.cpp in Sources */,
 				2095418819EEFC9500508378 /* Game.cpp in Sources */,
