@@ -137,21 +137,18 @@ void Game::guess()
             cout << "================================================================================" << endl;
             cout << "yiha, nicely done, good sir!" << endl;
             cout << "your final score is " << points_ << " points." << endl;
-            cout << "let me show you my world." << endl;
             cout << "================================================================================" << endl;
-            
-            points_ = 0;
-            flags_["path"] = true;
-            flags_["balls"] = true;
-            flags_["guessing"] = false;
         }
     }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-void Game::reset() {
+void Game::reset()
+{
+    points_ = 0;
     board_.initBallsRandom(5);
+    
     flags_["balls"] = false;
     flags_["path"] = false;
     flags_["guessing"] = false;

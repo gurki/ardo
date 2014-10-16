@@ -9,7 +9,7 @@ Sound::Sound(FMOD::Channel* channel, FMOD::Sound* sound, FMOD::DSP* dsp)
     dsp_ = dsp;
     
     nextAnchor_ = 0;
-    velocity_ = 10.0f;
+    velocity_ = 10;
 }
 
 
@@ -74,7 +74,7 @@ void Sound::update(const float dt)
         
         float value;
         dsp_->getParameter(FMOD_DSP_OSCILLATOR_RATE, &value, nullptr, 0);
-        dsp_->setParameter(FMOD_DSP_OSCILLATOR_RATE, value * 1.141f);
+        dsp_->setParameter(FMOD_DSP_OSCILLATOR_RATE, value * 1.1f);
     }
     
     //  update sound position and velocity accordingly

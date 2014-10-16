@@ -190,7 +190,8 @@ const vector<vec2i> Board::getPath(const bool full) const
         }
         //  u-turn on border
         else if (isBorder(pos) && (frontLeft || frontRight)) {
-            v.push_back(step);
+//            v.push_back(step);
+//            v.push_back(pos);
             return v;
         }
         //  u-turn in field

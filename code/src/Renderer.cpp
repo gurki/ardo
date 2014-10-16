@@ -191,7 +191,7 @@ void Renderer::drawGuesses(const unordered_set<vec2i> &guesses) const
         glPushMatrix();
         
             glTranslatef(ball.x, 0.01f, ball.y);
-            glColor3f(0.3f, 0.7f, 0.7f);
+            glColor3f(0.3f, 0.6f, 0.6f);
             glScalef(0.7f, 1.0f, 0.7f);
             drawFloorTile();
         
@@ -200,7 +200,7 @@ void Renderer::drawGuesses(const unordered_set<vec2i> &guesses) const
         glPushMatrix();
         
             glTranslatef(ball.x, 0.5f, ball.y);
-            glColor3f(0.3f, 0.7f, 0.7f);
+            glColor3f(0.3f, 0.8f, 0.8f);
             glutWireSphere(0.35f, 20, 20);
             
         glPopMatrix();
