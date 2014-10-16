@@ -209,14 +209,14 @@ void Renderer::drawGuesses(const unordered_set<vec2i> &guesses) const
 
 
 ////////////////////////////////////////////////////////////////////////////////
-void Renderer::drawCurrentGuess(const vec2i &guess) const
+void Renderer::drawMarker(const vec2i &marker) const
 {
     glLineWidth(2.0f);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
     glPushMatrix();
         
-         glTranslatef(guess.x, 0.01f, guess.y);
+         glTranslatef(marker.x, 0.01f, marker.y);
          glColor3f(0.3f, 0.8f, 0.8f);
          glScalef(0.8f, 1.0f, 0.8f);
          drawFloorTile();
@@ -225,7 +225,7 @@ void Renderer::drawCurrentGuess(const vec2i &guess) const
     
     glPushMatrix();
         
-        glTranslatef(guess.x, 0.5f, guess.y);
+        glTranslatef(marker.x, 0.5f, marker.y);
         glColor3f(0.3f, 1.0f, 1.0f);
         glutWireSphere(0.4f, 20, 20);
         

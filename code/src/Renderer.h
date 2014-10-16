@@ -26,7 +26,7 @@ class Renderer
         void drawPlayer(const vec2i& position) const;
         void drawBalls(const unordered_set<vec2i>& balls) const;
         void drawGuesses(const unordered_set<vec2i>& guesses) const;
-        void drawCurrentGuess(const vec2i& guess) const;
+        void drawMarker(const vec2i& marker) const;
         void drawPath(const vector<vec2i>& path) const;
     
         void setViewType(const bool firstPerson) { fpv_ = firstPerson; };

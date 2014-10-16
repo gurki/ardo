@@ -66,12 +66,12 @@ void Game::render()
     }
     
     if (flags_["path"]) {
-        renderer_.drawPath(board_.getPath());
+        renderer_.drawPath(board_.getPath(true));
     }
     
     if (flags_["guessing"]) {
         renderer_.drawGuesses(board_.getGuesses());
-        renderer_.drawCurrentGuess(marker_.position);
+        renderer_.drawMarker(marker_.position);
     }
     
     window_->display();
@@ -82,7 +82,7 @@ void Game::render()
 void Game::shoot()
 {
     //  get path
-    const vector<vec2i> path = board_.getPath();
+    const vector<vec2i> path = board_.getPath(false);
     
     //  spawn and shoot sound
     Sound& soundObj = soundRenderer_.spawnSound();
@@ -221,7 +221,7 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             
         //  spawn new balls
         case sf::Keyboard::Num1:
-            reset();
+            board_.initBallsRandom(5);
             break;
             
         //  reset guesses
