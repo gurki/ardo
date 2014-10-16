@@ -163,7 +163,7 @@ const bool Board::isBorder(const vec2i& pos) const { //says if the tile is on th
 
 
 ////////////////////////////////////////////////////////////////////////////////
-const vector<vec2i> Board::getPath() const
+const vector<vec2i> Board::getPath(const bool full) const
 {
     //  initialise
     int dir = getPlayerDirection();
@@ -184,15 +184,19 @@ const vector<vec2i> Board::getPath() const
         
         //  hit
         if (front) {
+            if (!isBorder(pos) && !full) v.pop_back();
             v.push_back(step);
             return v;
         }
         //  u-turn on border
         else if (isBorder(pos) && (frontLeft || frontRight)) {
+            v.push_back(step);
             return v;
         }
         //  u-turn in field
         else if (frontLeft && frontRight) {
+            if (!full) v.pop_back();
+            v.push_back(step);
             dir = turn(dir, 2);
             pos = move(pos, dir);
         }
@@ -207,6 +211,7 @@ const vector<vec2i> Board::getPath() const
             pos = move(pos, dir);
         //  no balls, pass streight through
         } else {
+            if (!isBorder(pos) && !full) v.pop_back();
             pos = step;
         }
         

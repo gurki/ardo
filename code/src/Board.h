@@ -48,7 +48,7 @@ class Board
         const vec2i getPlayerEyes() const;
         const Direction getPlayerDirection() const;
 
-        const vector<vec2i> getPath() const;
+        const vector<vec2i> getPath(const bool full = true) const;
     
     
     private:
