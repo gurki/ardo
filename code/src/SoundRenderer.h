@@ -42,7 +42,7 @@ class SoundRenderer
     
     private:
     
-        FMOD::Sound* createBuffer(const float duration) const;
+        FMOD::Sound* createBuffer(const float duration = 3.0f) const;
     
         vector<Sound> sounds_;
     
@@ -53,6 +53,7 @@ class SoundRenderer
         FMOD::Channel* channel_;
     
         FMOD::Sound* newSound_;
+        FMOD::Channel* newChannel_;
     
         FMOD_RESULT result_;
         FMOD::System* system_;

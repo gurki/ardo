@@ -10,7 +10,7 @@ SoundRenderer::SoundRenderer()
     result_ = system_->setSpeakerMode(FMOD_SPEAKERMODE_STEREO); FMOD::check(result_);
     result_ = system_->init(64, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0); FMOD::check(result_);
     
-    sound_ = createBuffer(5.0f);
+    sound_ = createBuffer();
     setListening(true);
 }
 
@@ -35,7 +35,7 @@ FMOD::Sound* SoundRenderer::createBuffer(const float duration) const
     
     FMOD_RESULT result;
     FMOD::Sound* sound = 0;
-    result = system_->createSound(0, FMOD_3D | FMOD_SOFTWARE | FMOD_OPENUSER, &exinfo, &sound);
+    result = system_->createSound(0, FMOD_LOOP_NORMAL | FMOD_3D | FMOD_SOFTWARE | FMOD_OPENUSER, &exinfo, &sound);
     FMOD::check(result_);
     
     return sound;
@@ -45,7 +45,7 @@ FMOD::Sound* SoundRenderer::createBuffer(const float duration) const
 ////////////////////////////////////////////////////////////////////////////////
 Sound& SoundRenderer::spawnSound()
 {
-    FMOD::Sound* sound = createBuffer(5);
+    FMOD::Sound* sound = createBuffer();
     
     FMOD::DSP* dsp = 0;
     result_ = system_->createDSPByType(FMOD_DSP_TYPE_OSCILLATOR, &dsp); FMOD::check(result_);
@@ -104,6 +104,8 @@ void SoundRenderer::clear() {
 ////////////////////////////////////////////////////////////////////////////////
 void SoundRenderer::update(const float dt)
 {
+    result_ = system_->update(); FMOD::check(result_);
+    
     for(auto iter = sounds_.begin(); iter != sounds_.end();)
     {
         iter->update(dt);
@@ -117,10 +119,10 @@ void SoundRenderer::update(const float dt)
     }
     
     //  record
-    system_->isRecording(0, &isListening_);
+//    system_->isRecording(0, &isListening_);
     
-    if (isListening_)
-    {
+//    if (isListening_)
+//    {
         //  synchronize channel with recording
         unsigned int position;
         system_->getRecordPosition(0, &position);
@@ -131,8 +133,8 @@ void SoundRenderer::update(const float dt)
         const int thresh = -4;
         
         float data[nsamples];
-        channel_ ->getWaveData(data, nsamples, 0);
-        
+        channel_->getWaveData(data, nsamples, 0);
+    
         float max = -numeric_limits<float>::max();
         float min = numeric_limits<float>::max();
         
@@ -142,40 +144,40 @@ void SoundRenderer::update(const float dt)
         }
         
         float amplitude = log(max - min);
-        
+
         //  detect start of input
         if (!isRecording_ && amplitude > thresh)
         {
-            newSound_ = createBuffer(5.0f);
+            newSound_ = createBuffer();
             
             system_->recordStop(0);
-            system_->recordStart(0, sound_, true);
-            
+            system_->recordStart(0, newSound_, false);
+
             channel_->stop();
-            system_->playSound(FMOD_CHANNEL_FREE, sound_, false, &channel_);
+            system_->playSound(FMOD_CHANNEL_REUSE, newSound_, false, &channel_);
             
             isRecording_ = true;
             
             cout << "start: " << position << endl;
         }
         //  detect end of input
-        else if (isRecording_ && amplitude <= thresh)
+        else if (isRecording_ && amplitude <= thresh && amplitude > -100)
         {
-//            system_->recordStop(0);
-//            system_->recordStart(0, sound_, true);
-//            
-//            channel_->stop();
-//            system_->playSound(FMOD_CHANNEL_FREE, sound_, false, &channel_);
+            system_->recordStop(0);
+            system_->recordStart(0, sound_, true);
+
+            channel_->stop();
+            system_->playSound(FMOD_CHANNEL_FREE, sound_, false, &channel_);
             
             //  spawn sound with recording
             
             isRecording_ = false;
-            
+            sf::sleep(sf::seconds(0.01f));
             cout << "end: " << position << endl;
         }
-    }
-    
-    result_ = system_->update(); FMOD::check(result_);
+        
+//        sf::sleep(sf::seconds(0.1f));
+//    }
 }
 
 
