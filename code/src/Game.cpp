@@ -237,6 +237,10 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             soundRenderer_.toggleListening();
             break;
             
+        case sf::Keyboard::O:
+            soundRenderer_.toggleAmmunition();
+            break;
+            
         //  balls
         case sf::Keyboard::B:
             flags_["balls"] = !flags_["balls"];

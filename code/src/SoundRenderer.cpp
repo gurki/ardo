@@ -47,16 +47,15 @@ void SoundRenderer::shoot()
     if (shouldListen_)
     {
         //  spawn sound with recording
-        const float velocity = 3 * (amplitude_ + 8);
         game->shoot();
         
         if (shootsRecording_) {
+            const float velocity = 2 * (amplitude_ + 8);
             sounds_.push_back(Sound(shotSound_, this));
+            sounds_.back().setVelocity(velocity);
         } else {
             sounds_.push_back(createDSP());
         }
-        
-        sounds_.back().setVelocity(velocity);
     }
     else
     {
@@ -64,6 +63,7 @@ void SoundRenderer::shoot()
         
         //  spawn and shoot sound
         createDSP();
+        sounds_.back().setVelocity(10);
     }
     
     const vector<vec2i> path = game->getBoard().getPath(false);

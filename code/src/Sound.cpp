@@ -8,8 +8,8 @@ Sound::Sound(FMOD::Sound* sound, SoundRenderer* soundRenderer)
     channel_ = nullptr;
     sound_ = sound;
     soundRenderer_ = soundRenderer;
+    dsp_ = nullptr;
     
-    nextAnchor_ = 0;
     velocity_ = 10;
 }
 
@@ -22,7 +22,6 @@ Sound::Sound(FMOD::Sound* sound, FMOD::Channel* channel, FMOD::DSP* dsp)
     dsp_ = dsp;
     soundRenderer_ = nullptr;
     
-    nextAnchor_ = 0;
     velocity_ = 10;
 }
 
@@ -105,14 +104,14 @@ void Sound::update(const float dt)
             }
         }
         
-        if (dsp_) {
+        if (dsp_ != nullptr) {
             float value;
             dsp_->getParameter(FMOD_DSP_OSCILLATOR_RATE, &value, nullptr, 0);
             dsp_->setParameter(FMOD_DSP_OSCILLATOR_RATE, value * 1.1f);
         }
     }
     
-    if (channel_)
+    if (channel_ != nullptr)
     {
         //  update sound position and velocity accordingly
         FMOD_VECTOR fpos = {static_cast<float>(position_.x), 0.5f, static_cast<float>(position_.y)};
