@@ -19,12 +19,13 @@ class Sound
         Sound(FMOD::Sound* sound, SoundRenderer* soundRenderer);
     
         void setPath(const vector<vec2i>& path);
-        void update(const float dt);
+        void setVelocity(const float velocity) { velocity_ = velocity; };
     
         const bool isAlive() const;
         const bool isMoving() const;
     
         void stop();
+        void update(const float dt);
 
     
     private:

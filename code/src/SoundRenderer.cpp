@@ -173,9 +173,14 @@ void SoundRenderer::update(const float dt)
         system_->playSound(FMOD_CHANNEL_REUSE, shotSound_, false, &channel_);
         
         //  spawn sound with recording
+        const float velocity = 5 * (amplitude + 8);
+        
         game->shoot();
+        
         Sound sound(shotSound_, this);
+        sound.setVelocity(velocity);
         sound.setPath(game->getBoard().getPath(false));
+        
         sounds_.push_back(sound);
         
         isRecording_ = true;
