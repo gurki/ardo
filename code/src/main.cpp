@@ -2,27 +2,37 @@
 #include "Game.h"
 
 #include <limits>
+#include <deque>
 
+
+void handleEvents(sf::Window& window);
+
+const float v = 1.0f;
+FMOD_VECTOR pos = { 0.0f, 0.0f, 0.0f };
+FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
+FMOD_VECTOR chvel = { 0.0f, 0.0f, -v };
+FMOD_VECTOR fwd = { 0.0f, 0.0f,-1.0f };
+FMOD_VECTOR up = { 0.0f, 1.0f, 1.0f };
 
 int main(int argc, char* argv[])
 {
-//    //  create window
-//    //      this must be done first, so that the opengl context can initialise
-//    //      before the Game() constructor initialises any rendering states
-//    sf::VideoMode mode = sf::VideoMode(1440, 900);
-//    string title = "ORDO";
-//    sf::ContextSettings settings = sf::ContextSettings(32);
-//    
-//    sf::Window window(
-//        mode,
-//        title,
-//        sf::Style::Default,
-//        settings
-//    );
+    //  create window
+    //      this must be done first, so that the opengl context can initialise
+    //      before the Game() constructor initialises any rendering states
+    sf::VideoMode mode = sf::VideoMode(1440, 900);
+    string title = "ORDO";
+    sf::ContextSettings settings = sf::ContextSettings(32);
+    
+    sf::Window window(
+        mode,
+        title,
+        sf::Style::Default,
+        settings
+    );
+
+    window.setVerticalSyncEnabled(true);
+    window.setActive();
 //
-//    window.setVerticalSyncEnabled(true);
-//    window.setActive();
-//    
 //    
 //    //  create and run game
 //    Game game(&window, mode, title, settings);
@@ -58,46 +68,133 @@ int main(int argc, char* argv[])
     result_ = system_->createSound(0, FMOD_3D | FMOD_LOOP_NORMAL | FMOD_SOFTWARE | FMOD_OPENUSER, &exinfo, &sound); FMOD::check(result_);
 
     //  record and play
-    FMOD::Channel* channel = 0;
-    system_->playSound(FMOD_CHANNEL_FREE, sound, false, &channel);
     system_->recordStart(0, sound, true);
-    channel->setSpeakerMix(5, 5, 5, 5, 5, 5, 5, 5);
-
-    FMOD_VECTOR listenerpos = { 0.0f, 0.0f, 0.0f };
-    system_->set3DListenerAttributes(0, &listenerpos, 0, 0, 0);
+    system_->set3DListenerAttributes(0, &pos, 0, &fwd, &up);
     
     //  add massive reverb
     FMOD::Reverb* reverb;
     system_->createReverb(&reverb);
     reverb->setActive(true);
     
-    FMOD_VECTOR pos = { 0.0f, 0.0f, 0.0f };
     float mindist = 0.0f;
     float maxdist = 100.0f;
     reverb->set3DAttributes(&pos, mindist, maxdist);
 
     FMOD_REVERB_PROPERTIES properties;
-    properties.DecayTime = 100;
-    properties.Reverb = 100;
+    properties.DecayTime = 10;
+    properties.Reverb = 10;
     reverb->setProperties(&properties);
     
     //  loop
-    sf::Clock clock;
+    sf::Clock clock1, clock2;
+    deque<FMOD::Channel*> channels;
     
-    while (true)
+    while (window.isOpen())
     {
-        system_->update();
+        const float dt1 = clock1.getElapsedTime().asSeconds();
+        const float dt2 = clock2.getElapsedTime().asSeconds();
+        
+        if (dt1 > 0.2f)
+        {
+            if (channels.size() >= 64) {
+                channels.front()->stop();
+                channels.pop_front();
+            }
+            
+            channels.push_back(nullptr);
+            system_->playSound(FMOD_CHANNEL_FREE, sound, false, &channels.back());
+            channels.back()->setSpeakerMix(5, 5, 5, 5, 5, 5, 5, 5);
+            
+            clock1.restart();
+        }
         
         unsigned int position;
         system_->getRecordPosition(0, &position);
-        channel->setPosition(position, FMOD_TIMEUNIT_PCM);
-
         
+        for (int i = 0; i < channels.size(); i++)
+        {
+            FMOD::Channel* channel = channels[i];
+            
+            channel->setPosition(position, FMOD_TIMEUNIT_PCM);
+            
+            FMOD_VECTOR oldPos;
+            channel->get3DAttributes(&oldPos, &chvel);
+            
+            oldPos.x += v * dt2;
+            cout << oldPos.x << endl;
+            channel->set3DAttributes(&oldPos, &chvel);
+        }
+        
+        clock2.restart();
+        
+        handleEvents(window);
+        system_->update();
         
         sf::sleep(sf::seconds(0.01f));
     }
     
     return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+void handleEvents(sf::Window& window)
+{
+    sf::Event event;
+    
+    while (window.pollEvent(event))
+    {
+        switch (event.type)
+        {
+            case sf::Event::Closed:
+                window.close();
+                break;
+                
+            case sf::Event::KeyPressed:
+            {
+                switch (event.key.code)
+                {
+                    case sf::Keyboard::Escape:
+                        window.close();
+                        break;
+                        
+                    case sf::Keyboard::W:
+                        pos.z -= 1;
+                        break;
+                        
+                    case sf::Keyboard::S:
+                        pos.z += 1;
+                        break;
+                        
+                    case sf::Keyboard::A:
+                        pos.x -= 1;
+                        break;
+                        
+                    case sf::Keyboard::D:
+                        pos.x += 1;
+                        break;
+                        
+                    default:
+                        break;
+                        
+                }
+                
+                cout << pos.x << ", " << pos.z << endl;
+            }
+                
+            default:
+                break;
+        }
+    }
 }
 
 
