@@ -35,9 +35,13 @@ class SoundRenderer
     
         void setListenerState(const Renderer::State& state);
         void playSound(const vec3f& position, const vec3f& velocity, FMOD::Sound* sound);
-        Sound& spawnSound();
+        Sound& createDSP();
+    
+        void toggleListening();
+        void toggleAmmunition();
     
         void clear();
+        void shoot();
         void update(const float dt);
     
         Game* game;
@@ -50,6 +54,8 @@ class SoundRenderer
         deque<Sound> sounds_;
         vector<FMOD::Channel*> channels_;
     
+        bool shouldListen_;
+        bool shootsRecording_;
         bool isRecording_;
     
         FMOD::Sound* sound_;
@@ -58,6 +64,8 @@ class SoundRenderer
     
         FMOD_RESULT result_;
         FMOD::System* system_;
+    
+        float amplitude_;
 };
 
 

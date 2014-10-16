@@ -85,10 +85,6 @@ void Game::shoot()
     //  get path
     const vector<vec2i> path = board_.getPath(false);
     
-    //  spawn and shoot sound
-//    Sound& soundObj = soundRenderer_.spawnSound();
-//    soundObj.setPath(path);
-    
     //  keep track of points
     const vec2i& first = *path.begin();
     const vec2i& last = *path.end();
@@ -229,12 +225,16 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             
         //  shoot
         case sf::Keyboard::Space:
-            shoot();
+            soundRenderer_.shoot();
             break;
             
         //  fullscreen
         case sf::Keyboard::F:
             toggleFullscreen();
+            break;
+            
+        case sf::Keyboard::L:
+            soundRenderer_.toggleListening();
             break;
             
         //  balls

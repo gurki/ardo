@@ -17,6 +17,7 @@ class Sound
     public:
     
         Sound(FMOD::Sound* sound, SoundRenderer* soundRenderer);
+        Sound(FMOD::Sound* sound, FMOD::Channel* channel, FMOD::DSP* dsp);
     
         void setPath(const vector<vec2i>& path);
         void setVelocity(const float velocity) { velocity_ = velocity; };

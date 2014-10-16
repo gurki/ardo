@@ -5,8 +5,22 @@
 ////////////////////////////////////////////////////////////////////////////////
 Sound::Sound(FMOD::Sound* sound, SoundRenderer* soundRenderer)
 {
+    channel_ = nullptr;
     sound_ = sound;
     soundRenderer_ = soundRenderer;
+    
+    nextAnchor_ = 0;
+    velocity_ = 10;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+Sound::Sound(FMOD::Sound* sound, FMOD::Channel* channel, FMOD::DSP* dsp)
+{
+    channel_ = channel;
+    sound_ = sound;
+    dsp_ = dsp;
+    soundRenderer_ = nullptr;
     
     nextAnchor_ = 0;
     velocity_ = 10;
@@ -20,9 +34,9 @@ void Sound::stop()
         channel_->stop();
     }
     
-    if (sound_) {
-        sound_->release();
-    }
+//    if (sound_) {
+//        sound_->release();
+//    }
 }
 
 
@@ -76,15 +90,34 @@ void Sound::update(const float dt)
         position_ = vec2f(next.x, next.y);
         nextAnchor_++;
     
-        //  turn! play sound
-        vec3f pos(position_.x, 0.5f, position_.y);
-        vec3f vel(0, 0, 0);
+        if (soundRenderer_)
+        {
+            //  turn! play sound
+            vec3f pos(position_.x, 0.5f, position_.y);
+            vec3f vel(0, 0, 0);
+            
+            soundRenderer_->playSound(pos, vel, sound_);
+        }
+        else
+        {
+            if (nextAnchor_ >= path_.size()) {
+                stop();
+            }
+        }
         
-        soundRenderer_->playSound(pos, vel, sound_);
-        
-//        float value;
-//        dsp_->getParameter(FMOD_DSP_OSCILLATOR_RATE, &value, nullptr, 0);
-//        dsp_->setParameter(FMOD_DSP_OSCILLATOR_RATE, value * 1.1f);
+        if (dsp_) {
+            float value;
+            dsp_->getParameter(FMOD_DSP_OSCILLATOR_RATE, &value, nullptr, 0);
+            dsp_->setParameter(FMOD_DSP_OSCILLATOR_RATE, value * 1.1f);
+        }
+    }
+    
+    if (channel_)
+    {
+        //  update sound position and velocity accordingly
+        FMOD_VECTOR fpos = {static_cast<float>(position_.x), 0.5f, static_cast<float>(position_.y)};
+        FMOD_VECTOR fvel = {static_cast<float>(v.x), 0, static_cast<float>(v.y)};
+        channel_->set3DAttributes(&fpos, &fvel);
     }
 }
 
