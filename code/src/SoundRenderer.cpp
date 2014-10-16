@@ -13,9 +13,11 @@ SoundRenderer::SoundRenderer()
     result_ = system_->init(64, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0); FMOD::check(result_);
     
     //  start listening
-    shootsRecording_ = false;
-    shouldListen_ = false;
     sound_ = createBuffer();
+    shootsRecording_ = false;
+    amplitude_ = 0;
+    
+    shouldListen_ = true;
     toggleListening();
     
     //  add massive reverb
@@ -211,8 +213,8 @@ void SoundRenderer::update(const float dt)
         channel_->setVolume(0);
         
         //  compute mean amplitude
-        const int nsamples = 1000;
-        const int thresh = -3;
+        const int nsamples = 100;
+        const int thresh = -4;
         
         float data[nsamples];
         channel_->getWaveData(data, nsamples, 0);
