@@ -36,7 +36,9 @@ class Hud
             const Position& position,
             const string& message,
             const float lifetime = 2);
-        
+    
+        void dismissMessageBox(const Position& position);
+    
         
     private:
     

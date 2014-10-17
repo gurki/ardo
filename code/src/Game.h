@@ -24,15 +24,18 @@ class Game
              const sf::ContextSettings& settings
         );
     
+        void shoot();
+        void guess();
+    
+        void showHelp();
+        void showWelcomeMessage();
+    
         void reset();
         void update();
         void render();
-        void showHelp();
         void handleEvents();
         void toggleFullscreen();
     
-        void shoot();
-        void guess();
     
         const Board& getBoard() { return board_; };
     

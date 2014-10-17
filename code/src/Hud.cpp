@@ -209,6 +209,11 @@ void Hud::addMessageBox(
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+void Hud::dismissMessageBox(const Hud::Position &position)
+{
+    boxes_[position] = HudMessage();
+}
 
 
 

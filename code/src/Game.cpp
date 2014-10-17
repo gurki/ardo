@@ -23,11 +23,37 @@ Game::Game(
     flags_["fpv"] = true;
     flags_["guessing"] = false;
     flags_["running"] = true;
+    flags_["shouldDismissMessageBox"] = false;
     
     //  initialise world
+    board_.setPlayerPosition(3);
     soundRenderer_.game = this;
+    showWelcomeMessage();
     
     clock_.restart();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+void Game::showWelcomeMessage()
+{
+    stringstream stream;
+    stream << "Welcome to ARDO!" << endl;
+    stream << "This is a remake of the 1970's Boardgame" << endl;
+    stream << "'BlackBox' or later 'ORDO'. Your goal is" << endl;
+    stream << "to guess the five balls located some-" << endl;
+    stream << "where on the board. But unlike the ori-" << endl;
+    stream << "ginal game, you send beams of sound into" << endl;
+    stream << "the field and have to listen carefully," << endl;
+    stream << "in order to make out the balls, which" << endl;
+    stream << "guide the sound along the board." << endl;
+    stream << endl;
+    stream << "Good luck!" << endl;
+    stream << endl;
+    stream << "PRESS ANY KEY TO CONTINUE" << endl;
+    
+    hud_.addMessageBox(Hud::Center, stream.str(), HudMessage::Permanent);
+    flags_["shouldDismissMessageBox"] = true;
 }
 
 
@@ -117,7 +143,8 @@ void Game::guess()
         stringstream stream;
         stream << "YOU NEED " << board_.getNumBalls() << " GUESSED BALLS FOR SUBMISSION";
         
-        hud_.addMessageBox(Hud::Center, stream.str(), 5.0f);
+        hud_.addMessageBox(Hud::Center, stream.str(), HudMessage::Permanent);
+        flags_["shouldDismissMessageBox"] = true;
     }
     //  ... which would be here
     else
@@ -147,7 +174,8 @@ void Game::guess()
             stream << "IT TOOK YOU " << shots_ << " SHOTS" << endl;
             stream << "TO START A NEW GAME, PRESS 'BACKSPACE'";
             
-            hud_.addMessageBox(Hud::Center, stream.str(), 20.0f);
+            hud_.addMessageBox(Hud::Center, stream.str(), HudMessage::Permanent);
+            flags_["shouldDismissMessageBox"] = true;
         }
     }
 }
@@ -156,7 +184,8 @@ void Game::guess()
 ////////////////////////////////////////////////////////////////////////////////
 void Game::reset()
 {
-    hud_.addMessageBox(Hud::Center, "STARTING NEW GAME");
+//    hud_.addMessageBox(Hud::Center, "STARTING NEW GAME", 2.0f);
+    showWelcomeMessage();
     
     shots_ = 0;
     points_ = 0;
@@ -240,6 +269,11 @@ void Game::showHelp()
 ////////////////////////////////////////////////////////////////////////////////
 void Game::handleKeyboardEvents(const sf::Event& event)
 {
+    if (flags_["shouldDismissMessageBox"]) {
+        flags_["shouldDismissMessageBox"] = false;
+        hud_.dismissMessageBox(Hud::Center);
+    }
+    
     switch (event.key.code)
     {
         case sf::Keyboard::H:
