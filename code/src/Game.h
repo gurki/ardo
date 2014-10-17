@@ -6,6 +6,7 @@
 #include "SoundRenderer.h"
 #include "Board.h"
 #include "Object.h"
+#include "Hud.h"
 
 #include <unordered_map>
 
@@ -17,7 +18,7 @@ class Game
     public:
     
         Game(
-             sf::Window* window,
+             sf::RenderWindow* window,
              const sf::VideoMode& mode,
              const string& title,
              const sf::ContextSettings& settings
@@ -42,11 +43,12 @@ class Game
         void handleKeyboardEvents(const sf::Event& event);
         void handleGuessingKeyboardEvents(const sf::Event& event);
     
-        sf::Window* window_;
+        sf::RenderWindow* window_;
         string windowTitle_;
         sf::VideoMode windowMode_;
         sf::ContextSettings windowSettings_;
     
+        Hud hud_;
         Board board_;
         Renderer renderer_;
         SoundRenderer soundRenderer_;

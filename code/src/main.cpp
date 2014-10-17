@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     string title = "ORDO";
     sf::ContextSettings settings = sf::ContextSettings(32);
     
-    sf::Window window(
+    sf::RenderWindow window(
         mode,
         title,
         sf::Style::Default,

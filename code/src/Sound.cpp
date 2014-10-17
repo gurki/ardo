@@ -42,19 +42,16 @@ void Sound::stop()
 ////////////////////////////////////////////////////////////////////////////////
 void Sound::setPath(const vector<vec2i>& path)
 {
-    if (path.empty()) {
-        cout << "empty path" << endl;
+    if (path.size() <= 1) {
+//        cout << "empty path" << endl;
         nextAnchor_ = -1;
+        stop();
         return;
     }
     
     nextAnchor_ = 1;
     position_ = vec2f(path[0].x, path[0].y);
-    
-    if (path.size() > 1) {
-        path_ = path;
-        nextAnchor_ = 1;
-    }
+    path_ = path;
 }
 
 

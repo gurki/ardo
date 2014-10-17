@@ -3,7 +3,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 Game::Game(
-    sf::Window* window,
+    sf::RenderWindow* window,
     const sf::VideoMode& mode,
     const string& title,
     const sf::ContextSettings& settings
@@ -74,6 +74,8 @@ void Game::render()
         renderer_.drawGuesses(board_.getGuesses());
         renderer_.drawMarker(marker_.position);
     }
+    
+    hud_.draw(*window_);
     
     window_->display();
 }
@@ -225,6 +227,7 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             
         //  shoot
         case sf::Keyboard::Space:
+            hud_.addMessage(Hud::Center, "shoot", 1.0f);
             soundRenderer_.shoot();
             break;
             
@@ -235,9 +238,11 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             
         case sf::Keyboard::L:
             soundRenderer_.toggleListening();
+            hud_.addMessage(Hud::Left, "toggleListening", 1.0f);
             break;
             
         case sf::Keyboard::O:
+            hud_.addMessage(Hud::Right, "toggleAmmunition", 1.0f);
             soundRenderer_.toggleAmmunition();
             break;
             
