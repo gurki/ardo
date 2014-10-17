@@ -145,7 +145,7 @@ void Game::guess()
             stream << "BOOYA! NICELY DONE!" << endl;
             stream << "YOUR FINAL SCORE IS " << points_ << "." << endl;
             stream << "IT TOOK YOU " << shots_ << " SHOTS" << endl;
-            stream << "TO START A NEW GAME, PRESS 'DELETE'";
+            stream << "TO START A NEW GAME, PRESS 'BACKSPACE'";
             
             hud_.addMessageBox(Hud::Center, stream.str(), 20.0f);
         }
@@ -214,24 +214,24 @@ void Game::handleEvents()
 void Game::showHelp()
 {
     stringstream stream;
-    stream << "KEYBOARD" << endl;
-    stream << endl;
-    stream << "H:           Display Help" << endl;
-    stream << "Left/Right:  Move Player" << endl;
-    stream << "Space:       Shoot" << endl;
-    stream << "I:           Activate/Deactivate Voice Input" << endl;
-    stream << "O:           Switch Synthetic/Recorded Sound" << endl;
-    stream << endl;
-    stream << "G:           Enter/Leave Guess" << endl;
-    stream << "WASD:        Move Marker" << endl;
-    stream << "Up/Down:     Place/Remove Guess" << endl;
-    stream << "Enter:       Submit Guess" << endl;
-    stream << "R:           Remove All Guesses" << endl;
-    stream << endl;
-    stream << "F:           Switch Fullscreen" << endl;
-    stream << "V:           Activate FP/Static Camera" << endl;
-    stream << "B:           Show/Hide Balls" << endl;
-    stream << "P:           Show/Hide Paths";
+    stream << "#KEYBOARD" << endl;
+    stream << "PLAYER" << endl;
+    stream << "  Left/Right:  Move Player" << endl;
+    stream << "  Space:       Shoot" << endl;
+    stream << "  I:           Activate/Deactivate Voice Input" << endl;
+    stream << "  O:           Switch Synthetic/Recorded Sound" << endl;
+    stream << "GUESSING" << endl;
+    stream << "  G:           Enter/Leave Guess" << endl;
+    stream << "  WASD:        Move Marker" << endl;
+    stream << "  Up/Down:     Place/Remove Guess" << endl;
+    stream << "  Enter:       Submit Guess" << endl;
+    stream << "  R:           Remove All Guesses" << endl;
+    stream << "VARIOUS" << endl;
+    stream << "  Backspace:   Start New Game" << endl;
+    stream << "  F:           Switch Fullscreen" << endl;
+    stream << "  V:           Activate FP/Static Camera" << endl;
+    stream << "  B:           Show/Hide Balls" << endl;
+    stream << "  P:           Show/Hide Paths";
     
     hud_.addMessageBox(Hud::Center, stream.str(), 0.5f);
 }
@@ -246,7 +246,7 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             showHelp();
             break;
             
-        case sf::Keyboard::Delete:
+        case sf::Keyboard::BackSpace:
             reset();
             break;
             
