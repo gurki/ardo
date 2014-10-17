@@ -27,6 +27,7 @@ class Game
         void reset();
         void update();
         void render();
+        void showHelp();
         void handleEvents();
         void toggleFullscreen();
     
@@ -54,6 +55,7 @@ class Game
         SoundRenderer soundRenderer_;
     
         int points_;
+        int shots_;
         Object marker_;
     
         sf::Clock clock_;

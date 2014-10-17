@@ -1,14 +1,66 @@
-//
-//  Hud.h
-//  ordo
-//
-//  Created by Tobias Gurdan on 16/10/14.
-//  Copyright (c) 2014 Tobias Gurdan. All rights reserved.
-//
+#ifndef HUD_H
+#define HUD_H
 
-#ifndef __ordo__Hud__
-#define __ordo__Hud__
+#include <vector>
+#include <map>
 
-#include <stdio.h>
+#include <SFML/OpenGL.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 
-#endif /* defined(__ordo__Hud__) */
+#include "common.h"
+#include "HudMessage.h"
+
+
+////////////////////////////////////////////////////////////////////////////////
+class Hud
+{
+    public:
+        
+        enum Position {
+            Left,
+            Center,
+            Right
+        };
+        
+        Hud();
+        
+        void draw(sf::RenderWindow& window);
+        
+        void addMessage(
+            const Position& position,
+            const string& message,
+            const float lifetime = -1);
+        
+        void addMessageBox(
+            const Position& position,
+            const string& message,
+            const float lifetime = 2);
+        
+        
+    private:
+    
+        const int getFontSize(const sf::Window& window) const;
+        const float getSpacing(const sf::Window& window) const;
+    
+        void drawMessage(
+            const Position& position,
+            const HudMessage& message,
+            const int row,
+            sf::RenderWindow& window);
+    
+        void drawMessageBox(
+            const Hud::Position &position,
+            const HudMessage &message,
+            sf::RenderWindow &window);
+    
+        void startDrawing(sf::RenderWindow& window) const;
+        void finishDrawing() const;
+        
+        sf::Font font_;
+        map<Position, vector<HudMessage>> messages_;    //  position -> [message]
+        map<Position, HudMessage> boxes_;               //  position -> message
+};
+
+
+#endif

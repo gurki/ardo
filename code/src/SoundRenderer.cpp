@@ -46,16 +46,19 @@ SoundRenderer::~SoundRenderer() {
 ////////////////////////////////////////////////////////////////////////////////
 void SoundRenderer::shoot()
 {
+    game->shoot();
+    
     if (shouldListen_)
     {
         //  spawn sound with recording
-        game->shoot();
-        
-        if (shootsRecording_) {
+        if (shootsRecording_)
+        {
             const float velocity = 2 * (amplitude_ + 8);
+            
             sounds_.push_back(Sound(shotSound_, this));
             sounds_.back().setVelocity(velocity);
-        } else {
+        }
+        else {
             sounds_.push_back(createDSP());
         }
     }

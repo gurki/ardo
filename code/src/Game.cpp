@@ -1,5 +1,7 @@
 #include "Game.h"
 
+#include <sstream>
+
 
 ////////////////////////////////////////////////////////////////////////////////
 Game::Game(
@@ -23,8 +25,6 @@ Game::Game(
     flags_["running"] = true;
     
     //  initialise world
-//    board_.init(8, 8);
-//    board_.initBallsRandom(5);
     soundRenderer_.game = this;
     
     clock_.restart();
@@ -84,6 +84,10 @@ void Game::render()
 ////////////////////////////////////////////////////////////////////////////////
 void Game::shoot()
 {
+    hud_.addMessage(Hud::Center, "pew", 0.2f);
+    
+    shots_++;
+    
     //  get path
     const vector<vec2i> path = board_.getPath(false);
     
@@ -108,8 +112,12 @@ void Game::shoot()
 void Game::guess()
 {
     //  one can only submit if all balls are set ...
-    if (board_.getNumGuesses() < board_.getNumBalls()) {
-        cout << "you need " << board_.getNumBalls() << " balls to lock in" << endl;
+    if (board_.getNumGuesses() < board_.getNumBalls())
+    {
+        stringstream stream;
+        stream << "YOU NEED " << board_.getNumBalls() << " GUESSED BALLS FOR SUBMISSION";
+        
+        hud_.addMessageBox(Hud::Center, stream.str(), 5.0f);
     }
     //  ... which would be here
     else
@@ -127,16 +135,19 @@ void Game::guess()
         
         //  account wrong guesses
         if (correct < board_.getNumBalls()) {
-            cout << "not quite. try again!" << endl;
+            hud_.addMessageBox(Hud::Center, "TRY AGAIN", 2.0f);
             points_ += 5 * (board_.getNumBalls() - correct);
         }
         //  all correct
         else
         {
-            cout << "================================================================================" << endl;
-            cout << "yiha, nicely done, good sir!" << endl;
-            cout << "your final score is " << points_ << " points." << endl;
-            cout << "================================================================================" << endl;
+            stringstream stream;
+            stream << "BOOYA! NICELY DONE!" << endl;
+            stream << "YOUR FINAL SCORE IS " << points_ << "." << endl;
+            stream << "IT TOOK YOU " << shots_ << " SHOTS" << endl;
+            stream << "TO START A NEW GAME, PRESS 'DELETE'";
+            
+            hud_.addMessageBox(Hud::Center, stream.str(), 20.0f);
         }
     }
 }
@@ -145,7 +156,11 @@ void Game::guess()
 ////////////////////////////////////////////////////////////////////////////////
 void Game::reset()
 {
+    hud_.addMessageBox(Hud::Center, "STARTING NEW GAME");
+    
+    shots_ = 0;
     points_ = 0;
+    
     board_.initBallsRandom(5);
     
     flags_["balls"] = false;
@@ -196,10 +211,45 @@ void Game::handleEvents()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+void Game::showHelp()
+{
+    stringstream stream;
+    stream << "KEYBOARD" << endl;
+    stream << endl;
+    stream << "H:           Display Help" << endl;
+    stream << "Left/Right:  Move Player" << endl;
+    stream << "Space:       Shoot" << endl;
+    stream << "I:           Activate/Deactivate Voice Input" << endl;
+    stream << "O:           Switch Synthetic/Recorded Sound" << endl;
+    stream << endl;
+    stream << "G:           Enter/Leave Guess" << endl;
+    stream << "WASD:        Move Marker" << endl;
+    stream << "Up/Down:     Place/Remove Guess" << endl;
+    stream << "Enter:       Submit Guess" << endl;
+    stream << "R:           Remove All Guesses" << endl;
+    stream << endl;
+    stream << "F:           Switch Fullscreen" << endl;
+    stream << "V:           Activate FP/Static Camera" << endl;
+    stream << "B:           Show/Hide Balls" << endl;
+    stream << "P:           Show/Hide Paths";
+    
+    hud_.addMessageBox(Hud::Center, stream.str(), 0.5f);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 void Game::handleKeyboardEvents(const sf::Event& event)
 {
     switch (event.key.code)
     {
+        case sf::Keyboard::H:
+            showHelp();
+            break;
+            
+        case sf::Keyboard::Delete:
+            reset();
+            break;
+            
         //  close on escape
         case sf::Keyboard::Escape:
             window_->close();
@@ -227,7 +277,6 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             
         //  shoot
         case sf::Keyboard::Space:
-            hud_.addMessage(Hud::Center, "shoot", 1.0f);
             soundRenderer_.shoot();
             break;
             
@@ -236,13 +285,15 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             toggleFullscreen();
             break;
             
-        case sf::Keyboard::L:
+        //  toggle input mode
+        case sf::Keyboard::I:
+            hud_.addMessage(Hud::Center, "toggleListening", 1.0f);
             soundRenderer_.toggleListening();
-            hud_.addMessage(Hud::Left, "toggleListening", 1.0f);
             break;
             
+        //  toggle soudn type
         case sf::Keyboard::O:
-            hud_.addMessage(Hud::Right, "toggleAmmunition", 1.0f);
+            hud_.addMessage(Hud::Center, "toggleAmmunition", 1.0f);
             soundRenderer_.toggleAmmunition();
             break;
             

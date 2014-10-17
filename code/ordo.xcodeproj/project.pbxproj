@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2019066819DEDC3E0066A962 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2019066719DEDC3E0066A962 /* OpenGL.framework */; };
 		203B0B5F19EE3C11008C629B /* SoundRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 203B0B5D19EE3C11008C629B /* SoundRenderer.cpp */; };
+		206D0A1F19F09DE4007AF90C /* HudMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206D0A1D19F09DE4007AF90C /* HudMessage.cpp */; };
 		2095418819EEFC9500508378 /* Game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2095418619EEFC9500508378 /* Game.cpp */; };
 		2095418B19EF19EF00508378 /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2095418A19EF19EF00508378 /* Object.cpp */; };
 		20AB278419DEF12000CA569C /* libsfml-audio.2.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 20AB277419DEF12000CA569C /* libsfml-audio.2.1.dylib */; };
@@ -51,6 +52,8 @@
 		2019066719DEDC3E0066A962 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		203B0B5D19EE3C11008C629B /* SoundRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SoundRenderer.cpp; path = src/SoundRenderer.cpp; sourceTree = SOURCE_ROOT; };
 		203B0B5E19EE3C11008C629B /* SoundRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SoundRenderer.h; path = src/SoundRenderer.h; sourceTree = SOURCE_ROOT; };
+		206D0A1D19F09DE4007AF90C /* HudMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HudMessage.cpp; path = ../src/HudMessage.cpp; sourceTree = "<group>"; };
+		206D0A1E19F09DE4007AF90C /* HudMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HudMessage.h; path = ../src/HudMessage.h; sourceTree = "<group>"; };
 		2095418619EEFC9500508378 /* Game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Game.cpp; path = src/Game.cpp; sourceTree = SOURCE_ROOT; };
 		2095418719EEFC9500508378 /* Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Game.h; path = src/Game.h; sourceTree = SOURCE_ROOT; };
 		2095418919EF17EA00508378 /* Object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Object.h; path = src/Object.h; sourceTree = SOURCE_ROOT; };
@@ -176,6 +179,8 @@
 				203B0B5D19EE3C11008C629B /* SoundRenderer.cpp */,
 				20BD0D1819EF703400780243 /* Hud.h */,
 				20BD0D1719EF703400780243 /* Hud.cpp */,
+				206D0A1E19F09DE4007AF90C /* HudMessage.h */,
+				206D0A1D19F09DE4007AF90C /* HudMessage.cpp */,
 				20AB279519DEF13A00CA569C /* main.cpp */,
 			);
 			path = ordo;
@@ -239,6 +244,7 @@
 			files = (
 				20AB279919DEF13A00CA569C /* main.cpp in Sources */,
 				20BD0D1919EF703400780243 /* Hud.cpp in Sources */,
+				206D0A1F19F09DE4007AF90C /* HudMessage.cpp in Sources */,
 				20AB279A19DEF13A00CA569C /* Renderer.cpp in Sources */,
 				203B0B5F19EE3C11008C629B /* SoundRenderer.cpp in Sources */,
 				2095418819EEFC9500508378 /* Game.cpp in Sources */,
