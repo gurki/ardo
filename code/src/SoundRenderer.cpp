@@ -217,7 +217,7 @@ void SoundRenderer::update(const float dt)
         
         //  compute mean amplitude
         const int nsamples = 100;
-        const int thresh = -4;
+        const int thresh = -5;
         
         float data[nsamples];
         channel_->getWaveData(data, nsamples, 0);
@@ -236,7 +236,7 @@ void SoundRenderer::update(const float dt)
         if (!isRecording_ && amplitude_ > thresh)
         {
             //  wait a certain amount of time between shots
-            if (clock.getElapsedTime().asSeconds() < 0.1f) {
+            if (clock.getElapsedTime().asSeconds() < 0.2f) {
                 return;
             }
             

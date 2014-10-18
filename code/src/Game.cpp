@@ -24,6 +24,7 @@ Game::Game(
     flags_["guessing"] = false;
     flags_["running"] = true;
     flags_["shouldDismissMessageBox"] = false;
+    flags_["hints"] = false;
     
     //  initialise world
     board_.setPlayerPosition(3);
@@ -110,27 +111,37 @@ void Game::render()
 ////////////////////////////////////////////////////////////////////////////////
 void Game::shoot()
 {
-    hud_.addMessage(Hud::Center, "pew", 0.2f);
-    
     shots_++;
     
+    stringstream stream;
+    stream << "PEW";
+
+    if (flags_["hints"]) {
+        stream << ". ";
+    }
+
     //  get path
     const vector<vec2i> path = board_.getPath(false);
     
     //  keep track of points
     const vec2i& first = *path.begin();
-    const vec2i& last = *path.end();
+    const vec2i& last = *prev(path.end());
     
     //  reflection
     if (first == last) {
+        if (flags_["hints"]) stream << "REFLECT!";
         points_++;
     //  hit
     } else if (!board_.isBorder(last)) {
+        if (flags_["hints"])stream << "HIT!";
         points_++;
     //  detour
     } else {
+        if (flags_["hints"]) stream << "DETOUR!";
         points_ += 2;
     }
+    
+    hud_.addMessage(Hud::Center, stream.str(), 0.5f);
 }
 
 
@@ -213,33 +224,6 @@ void Game::toggleFullscreen()
 
 
 ////////////////////////////////////////////////////////////////////////////////
-void Game::handleEvents()
-{
-    //  process events
-    sf::Event event;
-    
-    while (window_->pollEvent(event))
-    {
-        //  close window -> exit
-        if (event.type == sf::Event::Closed) {
-            window_->close();
-            flags_["running"] = false;
-        }
-        
-        //  handle keys
-        if (event.type == sf::Event::KeyPressed) {
-            handleKeyboardEvents(event);
-        }
-        
-        //  resize viewport
-        if (event.type == sf::Event::Resized) {
-            glViewport(0, 0, event.size.width, event.size.height);
-        }
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
 void Game::showHelp()
 {
     stringstream stream;
@@ -267,6 +251,96 @@ void Game::showHelp()
 
 
 ////////////////////////////////////////////////////////////////////////////////
+void Game::handleEvents()
+{
+    //  process events
+    sf::Event event;
+    
+    while (window_->pollEvent(event))
+    {
+        //  close window -> exit
+        if (event.type == sf::Event::Closed) {
+            window_->close();
+            flags_["running"] = false;
+        }
+        
+        //  handle keys
+        if (event.type == sf::Event::KeyPressed) {
+            handleKeyboardEvents(event);
+        }
+        
+        //  resize viewport
+        if (event.type == sf::Event::Resized) {
+            glViewport(0, 0, event.size.width, event.size.height);
+        }
+        
+//        if (event.type == sf::Event::JoystickButtonPressed)
+//        {
+//            switch (event.joystickButton.button)
+//            {
+//                case 11:
+//                    marker_.move();
+//                    break;
+//                    
+//                case 13:
+//                    marker_.left();
+//                    break;
+//                    
+//                case 12:
+//                    marker_.back();
+//                    break;
+//                    
+//                case 14:
+//                    marker_.right();
+//                    break;
+//                    
+//                case 0:
+//                    board_.addGuess(marker_.position);
+//                    break;
+//                    
+//                case 1:
+//                    board_.removeGuess(marker_.position);
+//                    break;
+//                    
+//                case 8:
+//                    guess();
+//                    break;
+//                    
+//                case 2:
+//                    flags_["guessing"] = !flags_["guessing"];
+//                    break;
+//                    
+//                case 9:
+//                    flags_["fpv"] = !flags_["fpv"];
+//                    renderer_.setViewType(flags_["fpv"]);
+//                    break;
+//                    
+//                //  shoot
+//                case :
+//                    soundRenderer_.shoot();
+//                    break;
+//                    
+//                    //  move player
+//                case :
+//                    board_.movePlayerRight();
+//                    break;
+//                    
+//                case :
+//                    board_.movePlayerLeft();
+//                    break;
+//                    
+//                default:
+//                    break;
+//            }
+//            
+//            cout << "joystick: " << event.joystickButton.joystickId;
+//            cout << ", button: " << event.joystickButton.button << endl;
+//        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 void Game::handleKeyboardEvents(const sf::Event& event)
 {
     if (flags_["shouldDismissMessageBox"]) {
@@ -276,8 +350,13 @@ void Game::handleKeyboardEvents(const sf::Event& event)
     
     switch (event.key.code)
     {
-        case sf::Keyboard::H:
+        case sf::Keyboard::Slash:
             showHelp();
+            break;
+            
+        case sf::Keyboard::H:
+            hud_.addMessage(Hud::Right, "TOGGLE HINTS");
+            flags_["hints"] = !flags_["hints"];
             break;
             
         case sf::Keyboard::BackSpace:
@@ -321,13 +400,13 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             
         //  toggle input mode
         case sf::Keyboard::I:
-            hud_.addMessage(Hud::Center, "toggleListening", 1.0f);
+            hud_.addMessage(Hud::Right, "TOGGLE INPUT MODE", 1.0f);
             soundRenderer_.toggleListening();
             break;
             
         //  toggle soudn type
         case sf::Keyboard::O:
-            hud_.addMessage(Hud::Center, "toggleAmmunition", 1.0f);
+            hud_.addMessage(Hud::Right, "TOGGLE SOUND TYPE", 1.0f);
             soundRenderer_.toggleAmmunition();
             break;
             
