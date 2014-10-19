@@ -1,6 +1,6 @@
 ARDO
 ===
-KTH DD2300 - Sound in Interaction
+DD2300@KTH - Sound in Interaction
 ---
 
 ![](/tex/img/gameplay2.png)
