@@ -36,3 +36,9 @@ ordo
 *.out
 *.app
 >>>>>>> 3a42569d8740ad340667e88eaba3b63a73c4ee71
+tex/report.aux
+tex/report.bbl
+tex/report.blg
+tex/report.fdb_latexmk
+tex/report.fls
+tex/report.log

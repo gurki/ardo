@@ -31,8 +31,8 @@ SoundRenderer::SoundRenderer()
     reverb->set3DAttributes(&pos, mindist, maxdist);
     
     FMOD_REVERB_PROPERTIES properties;
-    properties.DecayTime = 100;
-    properties.Reverb = 100;
+    properties.DecayTime = 10;
+    properties.Reverb = 10;
     reverb->setProperties(&properties);
 }
 
