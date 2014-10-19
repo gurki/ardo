@@ -27,4 +27,4 @@ Controls
 ---
 
 Backspace - Restart<br>
-H - Show Help<br>
+/ - Show Help<br>
