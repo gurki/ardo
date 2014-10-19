@@ -26,5 +26,5 @@ We found, that this auditory experience triggers joy in most players and after a
 Controls
 ---
 
-Backspace - Restart
-H - Show Help
+Backspace - Restart<br>
+H - Show Help<br>
