@@ -13,6 +13,10 @@ Tobias Gurdan<br>
 Technische Universität München<br>
 gurdan@in.tum.de<br>
 
+
+Abstract
+---
+
 In this work we present *ARDO*, a 3D single player video game to demonstrate and evaluate the use of spatialised sound to estimate position and direction of hidden landmarks. 
 To this end, we adapt the board game *ORDO*, also known as [*Black Box*](http://en.wikipedia.org/wiki/Black_Box_(game)). 
 Instead of shooting light beams into the world, we make use of sound attached to a moving source, which follows the same rules of movement as in the original. 
