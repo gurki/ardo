@@ -5,18 +5,20 @@
 #include "Sound.h"
 #include "Board.h"
 #include "Renderer.h"
+#include "NotifciationCenter.h"
 
-#include <wincompat.h>
-#include <fmod.hpp>
-#include <fmod_errors.h>
+#include <FMOD/fmod.hpp>
+#include <FMOD/fmod_errors.h>
 
 #include <vector>
 #include <deque>
 
+
 class Game;
 
+
 ////////////////////////////////////////////////////////////////////////////////
-class SoundRenderer
+class SoundRenderer : Notifiable
 {
     public:
     
@@ -38,13 +40,14 @@ class SoundRenderer
         Sound& createDSP();
     
         void toggleListening();
-        void toggleAmmunition();
     
         void clear();
         void shoot();
         void update(const float dt);
     
         Game* game;
+    
+        virtual void notify(const string& event);
  
     
     private:
@@ -55,7 +58,6 @@ class SoundRenderer
         vector<FMOD::Channel*> channels_;
     
         bool shouldListen_;
-        bool shootsRecording_;
         bool isRecording_;
     
         FMOD::Sound* sound_;

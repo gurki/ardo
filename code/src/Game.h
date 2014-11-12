@@ -7,13 +7,14 @@
 #include "Board.h"
 #include "Object.h"
 #include "Hud.h"
+#include "NotifciationCenter.h"
 
 #include <unordered_map>
 
 using namespace std;
 
 
-class Game
+class Game : Notifiable
 {
     public:
     
@@ -36,10 +37,11 @@ class Game
         void handleEvents();
         void toggleFullscreen();
     
-    
         const Board& getBoard() { return board_; };
     
         const bool isRunning() const { return flags_.at("running"); };
+    
+        virtual void notify(const string& event) {};
 
     
     private:

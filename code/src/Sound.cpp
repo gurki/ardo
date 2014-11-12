@@ -103,8 +103,8 @@ void Sound::update(const float dt)
         
         if (dsp_ != nullptr) {
             float value;
-            dsp_->getParameter(FMOD_DSP_OSCILLATOR_RATE, &value, nullptr, 0);
-            dsp_->setParameter(FMOD_DSP_OSCILLATOR_RATE, value * 1.1f);
+            dsp_->getParameterFloat(FMOD_DSP_OSCILLATOR_RATE, &value, nullptr, 0);
+            dsp_->setParameterFloat(FMOD_DSP_OSCILLATOR_RATE, value * 1.1f);
         }
     }
     

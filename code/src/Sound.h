@@ -4,9 +4,8 @@
 #include "common.h"
 #include "vector.h"
 
-#include <wincompat.h>
-#include <fmod.hpp>
-#include <fmod_errors.h>
+#include <FMOD/fmod.hpp>
+#include <FMOD/fmod_errors.h>
 
 
 class SoundRenderer;

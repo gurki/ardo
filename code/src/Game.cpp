@@ -404,12 +404,6 @@ void Game::handleKeyboardEvents(const sf::Event& event)
             soundRenderer_.toggleListening();
             break;
             
-        //  toggle soudn type
-        case sf::Keyboard::O:
-            hud_.addMessage(Hud::Right, "TOGGLE SOUND TYPE", 1.0f);
-            soundRenderer_.toggleAmmunition();
-            break;
-            
         //  balls
         case sf::Keyboard::B:
             flags_["balls"] = !flags_["balls"];

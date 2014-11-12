@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
     //  create window
     //      this must be done first, so that the opengl context can initialise
     //      before the Game() constructor initialises any rendering states
-    sf::VideoMode mode = sf::VideoMode(1920, 1080);
+    sf::VideoMode mode = sf::VideoMode(1280, 720);
     string title = "ORDO";
     sf::ContextSettings settings = sf::ContextSettings(32);
     
@@ -26,6 +26,8 @@ int main(int argc, char* argv[])
     
     //  create and run game
     Game game(&window, mode, title, settings);
+    
+    std::cout << game.isRunning() << std::endl;
     
     while (game.isRunning())
     {
