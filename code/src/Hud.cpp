@@ -1,5 +1,7 @@
 #include "Hud.h"
 
+#include <OpenGL/glu.h>
+
 #include <limits>
 #include <cassert>
 #include <sstream>
@@ -8,7 +10,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 Hud::Hud()
 {
-    assert(font_.loadFromFile("fonts/RBNo2Light.ttf"));
+    assert(font_.loadFromFile( "res/fonts/RBNo2Light.ttf" ));
 }
 
 

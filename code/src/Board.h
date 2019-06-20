@@ -2,7 +2,7 @@
 #define BOARD_H
 
 #include "common.h"
-#include "vector.h"
+#include "Vector.h"
 #include "Object.h"
 
 #include <unordered_set>

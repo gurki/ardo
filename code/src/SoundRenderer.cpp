@@ -111,7 +111,7 @@ void SoundRenderer::setListenerState(const Renderer::State& state)
     FMOD_VECTOR lfwd = {fwd.x, fwd.y, fwd.z};
     FMOD_VECTOR lup = {state[2].x, state[2].y, state[2].z};
     FMOD_VECTOR lvel = {0, 0, 0};
-    
+
     result_ = system_->set3DListenerAttributes(0, &lpos, &lvel, &lfwd, &lup);
     FMOD::check(result_);
 }
@@ -151,8 +151,10 @@ void SoundRenderer::update(const float dt)
         sounds_.pop_front();
     }
     
-    for (auto& sound : sounds_) {
-        sound.update(dt);
+    if ( ! sounds_.empty() ) {
+        for (auto& sound : sounds_) {
+            sound.update(dt);
+        }
     }
     
     //  remove finished channels of one shot sounds

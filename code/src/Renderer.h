@@ -2,8 +2,8 @@
 #define RENDERER_H
 
 #include "common.h"
-#include "board.h"
-#include "sound.h"
+#include "Board.h"
+#include "Sound.h"
 
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>

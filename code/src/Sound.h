@@ -2,10 +2,10 @@
 #define SOUND_H
 
 #include "common.h"
-#include "vector.h"
+#include "Vector.h"
 
-#include <FMOD/fmod.hpp>
-#include <FMOD/fmod_errors.h>
+#include <fmod.hpp>
+#include <fmod_errors.h>
 
 
 class SoundRenderer;

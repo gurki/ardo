@@ -71,6 +71,10 @@ const Side Board::getPlayerSide() const // takes the position and returns the si
 {
     const int nfields = 2 * (width_ + height_);
     
+    if ( nfields == 0 ) {
+        return North;
+    }
+    
     //  in case we did the full circle around the board
     int r = playerId_ % nfields;
     r = r < 0 ? r + nfields : r;
@@ -91,6 +95,10 @@ const Side Board::getPlayerSide() const // takes the position and returns the si
 const int Board::getPlayerPosition() const //get the position knowing the side
 {
     const int nfields = 2 * (width_ + height_);
+    
+    if ( nfields == 0 ) {
+        return 0;
+    }
     
     int r = playerId_ % nfields;
     r = r < 0 ? r + nfields : r;
